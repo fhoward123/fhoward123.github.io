@@ -1,0 +1,45 @@
+/* Import some fonts */
+@import url('https://fonts.googleapis.com/css?family=Dosis|Nunito');
+@import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600');
+@import url('https://fonts.googleapis.com/css?family=Abril+Fatface|Assistant');
+
+html, body {
+    height : 90%;
+    background-color: azure;
+}
+header {
+    text-align: center;
+}
+main {
+    background-color: cornsilk;
+    text-align: center;
+}
+form {
+    width: 50%;
+    margin-left: 0;
+    background-color: pink;
+    display: inline-block;
+}
+#main-title, #title {
+    font-family : 'Abril Fatface', cursive;
+    width: 50%;
+
+}
+#main-title {
+    font-size: 6vw;
+    color: blue;
+    margin: 0.1em 5em 0.5em 5em;
+    background-color: yellow;
+    width: auto;
+}
+#title {
+    color: red;
+}
+#searchBtn {
+    margin: 1em;
+    padding: 0.3em 1em;
+    border-radius: .5em;
+    color: green;
+    font-weight: 600;
+    font-size: 1.3vh;
+}
