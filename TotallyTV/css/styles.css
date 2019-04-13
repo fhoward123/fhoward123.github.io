@@ -6,6 +6,8 @@
 /* font-family : 'Righteous', cursive; */
 @import url('https://fonts.googleapis.com/css?family=Orbitron');
 /* font-family: 'Orbitron', sans-serif; */
+@import url('https://fonts.googleapis.com/css?family=Muli:700');
+/* font-family: 'Muli', sans-serif; */
 
 body {
     height : 100%;
@@ -15,7 +17,10 @@ body {
     position: relative;
 }
 header {
+    display: flex;
     text-align: center;
+    justify-content: center;
+    flex-direction: row;
 }
 main {
     /* background-color: cornsilk; */
@@ -27,12 +32,15 @@ form {
     /* background-color: pink; */
     display: inline-block;
 }
+input {
+    font-size: 14px;
+    font-weight: 200;
+}
 #main-title, #title {
     font-family : 'Orbitron', sans-serif;
     width: 50%;
     font-weight: 700;
     padding-bottom: 0.2em;
-
 }
 #main-title {
     font-size: 6vw;
@@ -51,8 +59,9 @@ form {
     padding: 0.3em 1em;
     border-radius: .5em;
     color: green;
-    font-weight: 600;
-    font-size: 1.3vh;
+    font-weight: 900;
+    font-size: 1.5vh;
+    font-family: 'Muli', sans-serif;
 }
 
 div#background {
@@ -77,10 +86,10 @@ footer {
 	display          : none;
 }
 #modal-textbox {
-	background    : white;
+    background-color: azure;
     font-family   : 'Nunito';
     text-align    : center;
-	height        : 350px;
+	height        : auto;
 	width         : 550px;
 	border-radius : 2px;
 	margin        : 150px auto;
@@ -95,11 +104,27 @@ body > img {
 
     /* background: bg-color bg-image position/bg-size bg-repeat bg-origin bg-clip bg-attachment initial|inherit; */
     /* background: url(http://static.tvmaze.com/uploads/images/original_untouched/176/440356.jpg) no-repeat center center fixed; */
-    opacity: 0.25;
-    top: 3em;
+    opacity: 0.5;
+    top: 7em;
     left: 0;
     bottom: 0;
     right: 0;
     position: absolute;
     z-index: -1;
+}
+#close-text, #close {
+    margin: 50px 0;
+}
+ul {
+    padding: 0 0 2em 0;
+}
+.tv-1 {
+    height: 100px;
+    width: 100px;
+    padding: 0.6em 0.8em 0 0
+}
+.tv-2 {
+    height: 60px;
+    width: 90px;
+    padding: 2em 0 0 2em;
 }

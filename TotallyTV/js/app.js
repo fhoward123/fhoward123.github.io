@@ -2,15 +2,35 @@ const DEBUG = true;
 const showSearch = 'search/shows?q=';
 const api = 'http://api.tvmaze.com/';
 
+const buildModalData = function(seriesInfo) {
+    const $ul = $('<ul>').addClass('summary-text');
+    //$ul.addClass('summary-text');
+    // status, scheduled, premiered, network
+    let $li = $('<li>').text(`Status: ${seriesInfo.status}`);
+    $($ul).append($li);
+    seriesInfo.scheduled = seriesInfo.scheduled === undefined ? 'N/A' : seriesInfo.scheduled;
+    $li = $('<li>').text(`Schedule: ${seriesInfo.scheduled}`);
+    $($ul).append($li);
+    $li = $('<li>').text(`Premiered: ${seriesInfo.premiered}`);
+    $($ul).append($li);
+    $li = $('<li>').text(`Network: ${seriesInfo.network}`);
+    $($ul).append($li);
+    // Append UL after summary paragraph
+    $('.summary-p').append($ul);
+    $('li').css('list-style-type', 'none');
+};
+
 const displayModal = function(seriesInfo) {
+    // Remove old data from modal
     $('.summary-text').remove();
     const $modal = $('#modal');
     // Strip out the HTML embedded in the summaries
     const summary = seriesInfo.seriesSummary.replace(/<\/?[^>]+(>|$)/g, "");
-    const $pSummary = $('<p>').addClass('summary-text').text(summary);
+    const $pSummary = $('<p>').addClass('summary-text').addClass('summary-p').text(summary);
     $pSummary.insertAfter('#show-title');
     if (DEBUG) console.log(`Series Name: ${seriesInfo.name}`);
     $('#show-title').text(seriesInfo.name);
+    buildModalData(seriesInfo);
 
     const closeModal = () => {
         $modal.css('display', 'none');
@@ -18,9 +38,9 @@ const displayModal = function(seriesInfo) {
     const openModal = () => {
         $modal.css('display', 'block');
     };
-    setTimeout(openModal, 2000);
+    setTimeout(openModal, 3000);
     $('#close').on('click', closeModal);
-}
+};
 
 const getSeriesInfo = function(tvDataArr) {
     if (DEBUG) console.log(tvDataArr);
@@ -55,7 +75,7 @@ const getSeriesInfo = function(tvDataArr) {
     }
     if (DEBUG) console.log(`Network: ${seriesData.network}`);
     return seriesData;
-}
+};
 
 const setBackgroundImg = function(imgURL) {
     // $('body > ').css('background', `url(${mainImage}) no-repeat center center fixed`);
@@ -67,7 +87,7 @@ const setBackgroundImg = function(imgURL) {
     $('body').append($img);
     // $($img).css('background', mainImage);
     return true;
-}
+};
 // const titleCase = function(string) {
 //     return string.replace(/(?:^|\s)\w/g, function(letter) {
 //         return letter.toUpperCase();
