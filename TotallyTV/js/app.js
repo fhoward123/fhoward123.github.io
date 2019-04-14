@@ -2,23 +2,60 @@ const DEBUG = true;
 const showSearch = 'search/shows?q=';
 const api = 'http://api.tvmaze.com/';
 
+let seriesID = 0;
+let numOfSeasons = 0;
+
 const buildModalData = function(seriesInfo) {
-    const $ul = $('<ul>').addClass('summary-text');
+    const $ul = $('<ul>').addClass('summary-text').addClass('summary-list');
     //$ul.addClass('summary-text');
     // status, scheduled, premiered, network
-    let $li = $('<li>').text(`Status: ${seriesInfo.status}`);
+    // let $li = $('<li>').text(`Status: ${seriesInfo.status}`);
+    let $li = $('<li><span class="heading">Status: </span>' + seriesInfo.status + '</li>');
     $($ul).append($li);
     if (DEBUG) console.log(`schedule string: "${seriesInfo.schedule}"`);
     seriesInfo.schedule = seriesInfo.schedule == 'undefined ' ? 'N/A' : seriesInfo.schedule;
-    $li = $('<li>').text(`Schedule: ${seriesInfo.schedule}`);
+    // $li = $('<li>').text(`Schedule: ${seriesInfo.schedule}`);
+    $li = $('<li><span class="heading">Schedule: </span>' + seriesInfo.schedule + '</li>');
+    // $li.text(seriesInfo.schedule);
     $($ul).append($li);
-    $li = $('<li>').text(`Premiered: ${seriesInfo.premiered}`);
+    // $li = $('<li>').text(`Premiered: ${seriesInfo.premiered}`);
+    $li = $('<li><span class="heading">Premiered: </span>' + seriesInfo.premiered + '</li>');
     $($ul).append($li);
-    $li = $('<li>').text(`Network: ${seriesInfo.network}`);
+    // $li = $('<li>').text(`Network: ${seriesInfo.network}`);
+    $li = $('<li><span class="heading">Network: </span>' + seriesInfo.network + '</li>');
     $($ul).append($li);
     // Append UL after summary paragraph
     $('.summary-p').append($ul);
     $('li').css('list-style-type', 'none');
+};
+
+const getAllSeasons = function() {
+    const queryPath = `shows/${seriesID}/seasons`;
+    // Latest AJAX method
+    const promise = $.ajax({
+        url:api + queryPath
+    });
+
+    promise.then(
+        // Success Callback function
+        function(tvDataArr) {
+            // Object of collected series info
+            const allSeasons = {};
+            const seasonsData = tvDataArr[0];
+            tvDataArr.forEach(function(season, i) {
+                numOfSeasons = i + 1;
+                allSeasons[`season${numOfSeasons}`] = season;
+                if (DEBUG) console.log(`Season ${numOfSeasons}: ID# ${allSeasons[`season${numOfSeasons}`].id}`);
+            });
+            if (DEBUG) console.log(allSeasons);
+            // $('#runtime').html(data.Runtime);
+            // $('#imdb-rating').html(data.imdbRating);
+        },
+        // Failure Callback function
+        function() {
+            console.log('bad request');
+        }
+    );
 };
 
 const displayModal = function(seriesInfo) {
@@ -35,6 +72,7 @@ const displayModal = function(seriesInfo) {
 
     const closeModal = () => {
         $modal.css('display', 'none');
+        getAllSeasons();
     }
     const openModal = () => {
         $modal.css('display', 'block');
@@ -50,7 +88,7 @@ const getSeriesInfo = function(tvDataArr) {
     // Find title match to data entered
     // const showIdx = findShowIdx(tvDataArr, showName);
     const showIdx = 0;
-    seriesData.id = tvDataArr[showIdx].show.id;
+    seriesID = seriesData.id = tvDataArr[showIdx].show.id;
     if (DEBUG) console.log(`Series ID: ${seriesData.id}`);
     seriesData.name = tvDataArr[showIdx].show.name;
     if (DEBUG) console.log(`Series Name: ${seriesData.name}`);
