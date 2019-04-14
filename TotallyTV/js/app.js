@@ -8,8 +8,9 @@ const buildModalData = function(seriesInfo) {
     // status, scheduled, premiered, network
     let $li = $('<li>').text(`Status: ${seriesInfo.status}`);
     $($ul).append($li);
-    seriesInfo.scheduled = seriesInfo.scheduled === undefined ? 'N/A' : seriesInfo.scheduled;
-    $li = $('<li>').text(`Schedule: ${seriesInfo.scheduled}`);
+    if (DEBUG) console.log(`schedule string: "${seriesInfo.schedule}"`);
+    seriesInfo.schedule = seriesInfo.schedule == 'undefined ' ? 'N/A' : seriesInfo.schedule;
+    $li = $('<li>').text(`Schedule: ${seriesInfo.schedule}`);
     $($ul).append($li);
     $li = $('<li>').text(`Premiered: ${seriesInfo.premiered}`);
     $($ul).append($li);
@@ -49,6 +50,8 @@ const getSeriesInfo = function(tvDataArr) {
     // Find title match to data entered
     // const showIdx = findShowIdx(tvDataArr, showName);
     const showIdx = 0;
+    seriesData.id = tvDataArr[showIdx].show.id;
+    if (DEBUG) console.log(`Series ID: ${seriesData.id}`);
     seriesData.name = tvDataArr[showIdx].show.name;
     if (DEBUG) console.log(`Series Name: ${seriesData.name}`);
     if (DEBUG) console.log(tvDataArr[showIdx]);
