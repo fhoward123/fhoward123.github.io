@@ -83,6 +83,7 @@ const setBackgroundImg = function(imgURL) {
     // $('body').css('background', 'url(' + mainImage + ') no-repeat center center fixed');
 
     const $img = $('<img>');
+    $img.addClass('back-img');
     $img.attr('src', imgURL);
     $('body').append($img);
     // $($img).css('background', mainImage);
