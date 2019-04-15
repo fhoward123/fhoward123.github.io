@@ -15,12 +15,15 @@ body {
     background-color: azure;
     display: block;
     position: relative;
+    line-height: calc(1.1em + 0.5vw);
 }
 header {
     display: flex;
     text-align: center;
     justify-content: center;
     flex-direction: row;
+    font-size: calc(0.7em + 0.5vw);
+    max-width: 100vh - 425px;
 }
 main {
     text-align: center;
@@ -37,20 +40,32 @@ input {
 #main-title, #title {
     font-family : 'Orbitron', sans-serif;
     font-weight: 700;
-    padding-bottom: 0.2em; */
+    padding-bottom: 0.2em;
+
 }
 #main-title {
-    font-size: 3em;
+    /* font-size: 3em; */
     color: blue;
     /* margin: 0.1em 5em 0.5em 5em; */
     background-color: azure;
     width: inherit;
     font-style: italic;
+    /* font-size: calc(1.2em + 2vw); */
 }
 #title {
     color: #7f13d8;
     font-style: normal;
+    /* font-size: calc(1.2em + 1vw); */
 }
+h1 {
+    font-size: calc(1.2em + 3vw);
+}
+@media (max-width: 320px) {
+    h1 {
+        font-size: calc(1em + 2vw);
+    }
+}
+
 #searchBtn {
     margin: 1em;
     padding: 0.3em 1em;
@@ -67,23 +82,22 @@ div#background {
     display: block;
     position: relative;
 }
-footer {
-    background-color: violet;
-}
 #show-title {
     font-family : 'Righteous', cursive;
 }
 #modal {
-	background-color : rgba(0, 0, 0, 0.4);
-	position         : fixed;
-	top              : 0;
-	left             : 0;
-	width            : 100%;
-	height           : 100%;
-	display          : none;
+	background-color : rgba(0, 50, 100, 0.4);
+	position   : fixed;
+	top        : 50%;
+    left       : 50%;
+    transform  : translate(-50%, -50%);
+	width      : 100%;
+	height     : 100%;
+	display    : none;
+    text-align : center;
 }
 #modal-textbox {
-    background-color: azure;
+    background-color : azure;
     font-family   : 'Nunito';
     text-align    : center;
 	height        : auto;
@@ -93,6 +107,56 @@ footer {
     padding       : 20px 10px 10px 10px;
 	box-shadow    : 0px 2px 2px rgba(0, 0, 0, 0.2);
 }
+
+
+@media (max-width: 414px) {
+    #modal-textbox {
+        background-color: azure;
+        font-family   : 'Nunito';
+        text-align    : center;
+    	height        : auto;
+    	max-width     : 340px;
+    	border-radius : 2px;
+    	margin        : 0px auto;
+        padding       : 20px 10px 10px 10px;
+    	box-shadow    : 0px 2px 2px rgba(0, 0, 0, 0.2);
+        display: inline-block;
+        width: 340px;
+    }
+}
+
+@media (max-width: 375px) {
+    #modal-textbox {
+        background-color: azure;
+        font-family   : 'Nunito';
+        text-align    : center;
+    	height        : auto;
+    	max-width     : 300px;
+    	border-radius : 2px;
+    	margin        : 20px auto;
+        padding       : 20px 10px 10px 10px;
+    	box-shadow    : 0px 2px 2px rgba(0, 0, 0, 0.2);
+        display: inline-block;
+        width: 300px;
+    }
+}
+
+@media (max-width: 320px) {
+    #modal-textbox {
+        background-color: azure;
+        font-family   : 'Nunito';
+        text-align    : center;
+    	height        : auto;
+    	max-width     : 280px;
+    	border-radius : 2px;
+    	margin        : 20px auto;
+        padding       : 20px 10px 10px 10px;
+    	box-shadow    : 0px 2px 2px rgba(0, 0, 0, 0.2);
+        display: inline-block;
+        width: 280px;
+    }
+}
+
 .summary-p {
     color: orangered;
 }
@@ -141,4 +205,45 @@ ul {
     height: 60px;
     width: 90px;
     padding: 2em 0 0 2em;
+}
+
+
+
+@media (max-width: 414px) {
+    .tv-1 {
+        height: 55px;
+        width: 55px;
+        padding: 0.1em 0.2em 0 0
+    }
+    .tv-2 {
+        height: 33px;
+        width: 50px;
+        padding: 0.8em 0.3em 0 1em;
+    }
+}
+
+@media (max-width: 375px) {
+    .tv-1 {
+        height: 66px;
+        width: 66px;
+        padding: 0.1em 0.3em 0 0
+    }
+    .tv-2 {
+        height: 40px;
+        width: 60px;
+        padding: 0.8em 0.3em 0 1em;
+    }
+}
+
+@media (max-width: 320px) {
+    .tv-1 {
+        height: 66px;
+        width: 66px;
+        padding: 0.1em 0.3em 0 0
+    }
+    .tv-2 {
+        height: 40px;
+        width: 60px;
+        padding: 0.8em 0.3em 0 1em;
+    }
 }
