@@ -4,6 +4,9 @@ const api = 'https://api.tvmaze.com/';
 
 let seriesID = 0;
 let numOfSeasons = 0;
+let allSeasons = {};
+let seasons = [];
+
 
 const buildModalData = function(seriesInfo) {
     const $ul = $('<ul>').addClass('summary-text').addClass('summary-list');
@@ -28,6 +31,26 @@ const buildModalData = function(seriesInfo) {
     $('li').css('list-style-type', 'none');
 };
 
+const makeSeasonBtns = function(tvDataArr) {
+    $('.season-btns').remove();
+    seasons = [];
+
+    tvDataArr.forEach(function(season, i) {
+        if (DEBUG) console.log('HERE 1');
+        numOfSeasons = i + 1;
+        allSeasons[`season${numOfSeasons}`] = season;
+        if (DEBUG) console.log(`Season ${numOfSeasons}: ID# ${allSeasons[`season${numOfSeasons}`].id}`);
+        seasons.push(`season${numOfSeasons}`);
+        // seasonImages[`season${numOfSeasons}`] = season.image.medium;
+        // const $img = $('<img>').addClass('season-pics').attr('src', season.image.medium);
+        // $('#season-pics').append($img);
+        const $seasonBtn = $('<input>').addClass('season-btns').attr('type', 'button').attr('value', `season ${numOfSeasons}`);
+        $('#season-btns').append($seasonBtn);
+    });
+    if (DEBUG) console.log(allSeasons);
+    if (DEBUG) console.log(seasons);
+}
+
 const getAllSeasons = function() {
     const queryPath = `shows/${seriesID}/seasons`;
     // Latest AJAX method
@@ -39,14 +62,10 @@ const getAllSeasons = function() {
         // Success Callback function
         function(tvDataArr) {
             // Object of collected series info
-            const allSeasons = {};
             const seasonsData = tvDataArr[0];
-            tvDataArr.forEach(function(season, i) {
-                numOfSeasons = i + 1;
-                allSeasons[`season${numOfSeasons}`] = season;
-                if (DEBUG) console.log(`Season ${numOfSeasons}: ID# ${allSeasons[`season${numOfSeasons}`].id}`);
-            });
-            if (DEBUG) console.log(allSeasons);
+            // const seasonImages = {};
+            makeSeasonBtns(tvDataArr);
+
             // $('#runtime').html(data.Runtime);
             // $('#imdb-rating').html(data.imdbRating);
         },
@@ -72,11 +91,13 @@ const displayModal = function(seriesInfo) {
     const closeModal = () => {
         $modal.css('display', 'none');
         getAllSeasons();
+        // makeSeasonBtns(tvDataArr);
+
     }
     const openModal = () => {
         $modal.css('display', 'block');
     };
-    setTimeout(openModal, 3000);
+    setTimeout(openModal, 2000);
     $('#close').on('click', closeModal);
 };
 
@@ -118,36 +139,22 @@ const getSeriesInfo = function(tvDataArr) {
 };
 
 const setBackgroundImg = function(imgURL) {
-    // $('body > ').css('background', `url(${mainImage}) no-repeat center center fixed`);
-    // $('body::after').css('background', `url(${mainImage}) no-repeat center center fixed`);
-    // $('body').css('background', 'url(' + mainImage + ') no-repeat center center fixed');
-
     const $img = $('<img>');
     $img.addClass('back-img');
     $img.attr('src', imgURL);
     $('body').append($img);
-    // $($img).css('background', mainImage);
     return true;
 };
-// const titleCase = function(string) {
-//     return string.replace(/(?:^|\s)\w/g, function(letter) {
-//         return letter.toUpperCase();
-//     });
-// }
-// const findShowIdx = function(tvDataArr, showName) {
-//     for ( i = 0; i < tvDataArr.length; i++ ) {
-//         if (DEBUG) console.log(tvDataArr[i].show.name);
-//         if ( tvDataArr[i].show.name === showName ) {
-//             if (DEBUG) console.log(`Found ${showName}`);
-//                 return i;
-//         }
-//         else {
-//             if (DEBUG) console.log(`No match for ${showName}`);
-//         }
-//     }
-// }
+
+//////////
+// main //
+//////////
 $('form').on('submit', function(event) {
     $('body > img').remove();
+    $('.season-btns').remove();
+    seasons = [];
+    allSeasons = {};
+
     event.preventDefault();
     // Select all input items with attribute "type" = "text" in HTML
     let showName = $('input[type="text"]').val();
@@ -166,6 +173,8 @@ $('form').on('submit', function(event) {
             const seriesData = getSeriesInfo(tvDataArr);
             setBackgroundImg(seriesData.mainImage);
             displayModal(seriesData);
+            // makeSeasonBtns(tvDataArr);
+
             // $('#runtime').html(data.Runtime);
             // $('#imdb-rating').html(data.imdbRating);
         },
@@ -175,3 +184,25 @@ $('form').on('submit', function(event) {
         }
     );
 });
+
+
+
+// JUNK //
+
+// const titleCase = function(string) {
+//     return string.replace(/(?:^|\s)\w/g, function(letter) {
+//         return letter.toUpperCase();
+//     });
+// }
+// const findShowIdx = function(tvDataArr, showName) {
+//     for ( i = 0; i < tvDataArr.length; i++ ) {
+//         if (DEBUG) console.log(tvDataArr[i].show.name);
+//         if ( tvDataArr[i].show.name === showName ) {
+//             if (DEBUG) console.log(`Found ${showName}`);
+//                 return i;
+//         }
+//         else {
+//             if (DEBUG) console.log(`No match for ${showName}`);
+//         }
+//     }
+// }
