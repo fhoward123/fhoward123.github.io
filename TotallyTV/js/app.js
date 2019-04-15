@@ -1,6 +1,6 @@
 const DEBUG = true;
 const showSearch = 'search/shows?q=';
-const api = 'http://api.tvmaze.com/';
+const api = 'https://api.tvmaze.com/';
 
 let seriesID = 0;
 let numOfSeasons = 0;
@@ -16,7 +16,6 @@ const buildModalData = function(seriesInfo) {
     seriesInfo.schedule = seriesInfo.schedule == 'undefined ' ? 'N/A' : seriesInfo.schedule;
     // $li = $('<li>').text(`Schedule: ${seriesInfo.schedule}`);
     $li = $('<li><span class="heading">Schedule: </span>' + seriesInfo.schedule + '</li>');
-    // $li.text(seriesInfo.schedule);
     $($ul).append($li);
     // $li = $('<li>').text(`Premiered: ${seriesInfo.premiered}`);
     $li = $('<li><span class="heading">Premiered: </span>' + seriesInfo.premiered + '</li>');
