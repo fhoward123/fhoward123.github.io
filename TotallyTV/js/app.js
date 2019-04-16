@@ -197,22 +197,44 @@ const onEpisodeClick = function() {
 
 };
 
-const makeEpisodeBtns = function() {
-    if (DEBUG) console.log('INSIDE makeEpisodeBtns');
-    // remove old buttons to display new query results
-    $('.episode-btns').remove();
+// const makeEpisodeBtns = function() {
+//     if (DEBUG) console.log('INSIDE makeEpisodeBtns');
+//     // remove old buttons to display new query results
+//     $('.episode-btns').remove();
+//
+//     episodes.forEach(function(episode, i) {
+//         // allSeasons[episode] = `Episode ${i}`;
+//         const episodeText = allEpisodesForSeason[`${episode}`]['episodeName'];
+//         const $episodeBtn = $('<input>').addClass('episode-btns').attr('type', 'button').attr('id', `episode${i + 1}`).attr('value', `Episode ${i + 1} - ${episodeText}`);
+//         $('#episode-btns').append($episodeBtn);
+//     });
+//     // Setup listener for when a season button is clicked
+//     $('.episode-btns').on('click', onEpisodeClick);
+// }
+const makeEpisodeOptions = function() {
+    if (DEBUG) console.log('INSIDE makeEpisodeOptions');
+    // remove old option container to display new episode results
+    $('#episode-container').remove();
+    const $select = $('<select>').attr('id', 'episode-container').attr('size', 8);
+    $('#episode-options').append($select);
 
     episodes.forEach(function(episode, i) {
         // allSeasons[episode] = `Episode ${i}`;
-        const $episodeBtn = $('<input>').addClass('episode-btns').attr('type', 'button').attr('id', `episode${i + 1}`).attr('value', `Episode ${i + 1}`);
-        $('#episode-btns').append($episodeBtn);
+        const episodeText = allEpisodesForSeason[`${episode}`]['episodeName'];
+        const $episodeOpt = $('<option>').addClass('episode-options').attr('value', `episode${i + 1}`).attr('id', `episode${i + 1}`).text(`Episode ${i + 1} - ${episodeText}`);
+        $select.append($episodeOpt);
     });
     // Setup listener for when a season button is clicked
-    $('.episode-btns').on('click', onEpisodeClick);
+    $('.episode-options').on('click', onEpisodeClick);
 }
+// Setup listener for when a season button is clicked
+//$('.episode-options').on('click', onEpisodeClick);
 
 const getSeasonInfo = function() {
     if (DEBUG) console.log('INSIDE getSeasonInfo');
+
+    $('.episode-options').remove();
+
     if (DEBUG) console.log(`Getting info for Season: ${seasonNumber}`);
     const queryPath = `seasons/${seasonID}/episodes`;
     const promise = $.ajax({
@@ -237,10 +259,10 @@ const getSeasonInfo = function() {
             });
             // Log episode 2 name for testing purposes
             const e2Name = allEpisodesForSeason['episode2']['episodeSum'];
-            if (DEBUG) console.log(`${allEpisodesForSeason}`);
             if (DEBUG) console.log(`Season ${seasonNumber} Episode 2 of ${seriesData.name}: ${e2Name}`);
 
-            makeEpisodeBtns();
+            //makeEpisodeBtns();
+            makeEpisodeOptions();
             //buildEpisodesModal();
 
             // $('#runtime').html(data.Runtime);
