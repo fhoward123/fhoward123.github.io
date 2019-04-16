@@ -6,9 +6,16 @@ let seriesID = 0;
 let numOfSeasons = 0;
 let allSeasons = {};
 let seasons = [];
+let allEpisodesForSeason = {};
+let seriesData = {};
+let seasonNumber = 0;
+let seasonID = 0;
+let episodes = [];
+
 
 
 const buildModalData = function(seriesInfo) {
+    if (DEBUG) console.log('INSIDE buildModalData');
     const $ul = $('<ul>').addClass('summary-text').addClass('summary-list');
     //$ul.addClass('summary-text');
     // status, scheduled, premiered, network
@@ -32,7 +39,11 @@ const buildModalData = function(seriesInfo) {
 };
 
 const makeSeasonBtns = function(tvDataArr) {
+    if (DEBUG) console.log('INSIDE makeSeasonBtns');
+    // remove old buttons to display new query results
     $('.season-btns').remove();
+    // Clear input box after closing modal
+    $('#input-form').find('input:text').val('');
     seasons = [];
 
     tvDataArr.forEach(function(season, i) {
@@ -44,14 +55,17 @@ const makeSeasonBtns = function(tvDataArr) {
         // seasonImages[`season${numOfSeasons}`] = season.image.medium;
         // const $img = $('<img>').addClass('season-pics').attr('src', season.image.medium);
         // $('#season-pics').append($img);
-        const $seasonBtn = $('<input>').addClass('season-btns').attr('type', 'button').attr('value', `season ${numOfSeasons}`);
+        const $seasonBtn = $('<input>').addClass('season-btns').attr('type', 'button').attr('id', `season${numOfSeasons}`).attr('value', `season ${numOfSeasons}`);
         $('#season-btns').append($seasonBtn);
     });
     if (DEBUG) console.log(allSeasons);
     if (DEBUG) console.log(seasons);
+    // Setup listener for when a season button is clicked
+    $('.season-btns').on('click', onSeasonClick);
 }
 
 const getAllSeasons = function() {
+    if (DEBUG) console.log('INSIDE getAllSeasons');
     const queryPath = `shows/${seriesID}/seasons`;
     // Latest AJAX method
     const promise = $.ajax({
@@ -61,6 +75,7 @@ const getAllSeasons = function() {
     promise.then(
         // Success Callback function
         function(tvDataArr) {
+            if (DEBUG) console.log('running callback function');
             // Object of collected series info
             const seasonsData = tvDataArr[0];
             // const seasonImages = {};
@@ -75,11 +90,24 @@ const getAllSeasons = function() {
         }
     );
 };
+const $modal = $('#modal');
+
+const closeModal = () => {
+    if (DEBUG) console.log('INSIDE closeModal');
+    $modal.css('display', 'none');
+    getAllSeasons();
+}
+
+const openModal = () => {
+    if (DEBUG) console.log('INSIDE openModal');
+    $modal.css('display', 'block');
+};
 
 const displayModal = function(seriesInfo) {
+    if (DEBUG) console.log('INSIDE displayModal');
     // Remove old data from modal
     $('.summary-text').remove();
-    const $modal = $('#modal');
+
     // Strip out the HTML embedded in the summaries
     const summary = seriesInfo.seriesSummary.replace(/<\/?[^>]+(>|$)/g, "");
     const $pSummary = $('<p>').addClass('summary-text').addClass('summary-p').text(summary);
@@ -87,24 +115,15 @@ const displayModal = function(seriesInfo) {
     if (DEBUG) console.log(`Series Name: ${seriesInfo.name}`);
     $('#show-title').text(seriesInfo.name);
     buildModalData(seriesInfo);
-
-    const closeModal = () => {
-        $modal.css('display', 'none');
-        getAllSeasons();
-        // makeSeasonBtns(tvDataArr);
-
-    }
-    const openModal = () => {
-        $modal.css('display', 'block');
-    };
     setTimeout(openModal, 2000);
-    $('#close').on('click', closeModal);
 };
+$('#close').on('click', closeModal);
 
 const getSeriesInfo = function(tvDataArr) {
+    if (DEBUG) console.log('INSIDE getSeriesInfo');
     if (DEBUG) console.log(tvDataArr);
     // Object to hold gleaned data from TVMaze
-    const seriesData = {};
+    seriesData = {};
     // Find title match to data entered
     // const showIdx = findShowIdx(tvDataArr, showName);
     const showIdx = 0;
@@ -139,6 +158,7 @@ const getSeriesInfo = function(tvDataArr) {
 };
 
 const setBackgroundImg = function(imgURL) {
+    if (DEBUG) console.log('INSIDE setBackgroundImg');
     const $img = $('<img>');
     $img.addClass('back-img');
     $img.attr('src', imgURL);
@@ -146,9 +166,108 @@ const setBackgroundImg = function(imgURL) {
     return true;
 };
 
+const buildEpisodesModal = function () {
+    if (DEBUG) console.log('INSIDE buildEpisodesModal');
+    // allEpisodesForSeason[`episode${episodeNum}`]['episodeName']
+
+    const $ul = $('<ul>').addClass('summary-text').addClass('summary-list');
+    //$ul.addClass('summary-text');
+    // status, scheduled, premiered, network
+    // let $li = $('<li>').text(`Status: ${seriesInfo.status}`);
+    let $li = $('<li><span class="heading">Status: </span>' + seriesInfo.status + '</li>');
+    $($ul).append($li);
+    if (DEBUG) console.log(`schedule string: "${seriesInfo.schedule}"`);
+    seriesInfo.schedule = seriesInfo.schedule == 'undefined ' ? 'N/A' : seriesInfo.schedule;
+    // $li = $('<li>').text(`Schedule: ${seriesInfo.schedule}`);
+    $li = $('<li><span class="heading">Schedule: </span>' + seriesInfo.schedule + '</li>');
+    $($ul).append($li);
+    // $li = $('<li>').text(`Premiered: ${seriesInfo.premiered}`);
+    $li = $('<li><span class="heading">Premiered: </span>' + seriesInfo.premiered + '</li>');
+    $($ul).append($li);
+    // $li = $('<li>').text(`Network: ${seriesInfo.network}`);
+    $li = $('<li><span class="heading">Network: </span>' + seriesInfo.network + '</li>');
+    $($ul).append($li);
+    // Append UL after summary paragraph
+    $('.summary-p').append($ul);
+    $('li').css('list-style-type', 'none');
+};
+
+const onEpisodeClick = function() {
+    if (DEBUG) console.log('INSIDE onEpisodeClick');
+
+};
+
+const makeEpisodeBtns = function() {
+    if (DEBUG) console.log('INSIDE makeEpisodeBtns');
+    // remove old buttons to display new query results
+    $('.episode-btns').remove();
+
+    episodes.forEach(function(episode, i) {
+        // allSeasons[episode] = `Episode ${i}`;
+        const $episodeBtn = $('<input>').addClass('episode-btns').attr('type', 'button').attr('id', `episode${i + 1}`).attr('value', `Episode ${i + 1}`);
+        $('#episode-btns').append($episodeBtn);
+    });
+    // Setup listener for when a season button is clicked
+    $('.episode-btns').on('click', onEpisodeClick);
+}
+
+const getSeasonInfo = function() {
+    if (DEBUG) console.log('INSIDE getSeasonInfo');
+    if (DEBUG) console.log(`Getting info for Season: ${seasonNumber}`);
+    const queryPath = `seasons/${seasonID}/episodes`;
+    const promise = $.ajax({
+        url:api + queryPath
+    });
+
+    promise.then(
+        // Success Callback function
+        function(seasonArr) {
+            if (DEBUG) console.log('running callback function for getSeasonInfo');
+            seasonArr.forEach(function(episode, i) {
+                const episodeNum = i + 1;
+                episodes.push(`episode${episodeNum}`);
+                allEpisodesForSeason[`episode${episodeNum}`] = {};
+                allEpisodesForSeason[`episode${episodeNum}`]['episodeName'] = episode.name;
+                allEpisodesForSeason[`episode${episodeNum}`]['seasonNumber'] = episode.season;
+                allEpisodesForSeason[`episode${episodeNum}`]['episodeNumber'] = episode.number;
+                if (episode.image) {
+                    allEpisodesForSeason[`episode${episodeNum}`]['episodeImg'] = episode.image.medium;
+                }
+                allEpisodesForSeason[`episode${episodeNum}`]['episodeSum'] = episode.summary;
+            });
+            // Log episode 2 name for testing purposes
+            const e2Name = allEpisodesForSeason['episode2']['episodeSum'];
+            if (DEBUG) console.log(`${allEpisodesForSeason}`);
+            if (DEBUG) console.log(`Season ${seasonNumber} Episode 2 of ${seriesData.name}: ${e2Name}`);
+
+            makeEpisodeBtns();
+            //buildEpisodesModal();
+
+            // $('#runtime').html(data.Runtime);
+            // $('#imdb-rating').html(data.imdbRating);
+        },
+        // Failure Callback function
+        function() {
+            console.log('bad request');
+        }
+    );
+};
+
+const onSeasonClick = function(event) {
+    if (DEBUG) console.log('INSIDE onSeasonClick');
+    const eleID = $(event.currentTarget).attr('id');
+    seasonID = allSeasons[eleID].id;
+    const seasonStartDate = allSeasons[eleID].premiereDate;
+    const seasonEndDate = allSeasons[eleID].endDate;
+    seasonNumber = allSeasons[eleID].number;
+    //getSeasonInfo(seasonNumber, seasonID);
+    getSeasonInfo();
+};
+
 //////////
 // main //
 //////////
+if (DEBUG) console.log('WAITING for SEARCH click');
 $('form').on('submit', function(event) {
     $('body > img').remove();
     $('.season-btns').remove();
@@ -169,6 +288,7 @@ $('form').on('submit', function(event) {
     promise.then(
         // Success Callback function
         function(tvDataArr) {
+            if (DEBUG) console.log('INSIDE initial PROMISE function');
             // Object of collected series info
             const seriesData = getSeriesInfo(tvDataArr);
             setBackgroundImg(seriesData.mainImage);
