@@ -53,7 +53,7 @@ const makeSeasonBtns = function(tvDataArr) {
         // seasonImages[`season${numOfSeasons}`] = season.image.medium;
         // const $img = $('<img>').addClass('season-pics').attr('src', season.image.medium);
         // $('#season-pics').append($img);
-        const $seasonBtn = $('<input>').addClass('season-btns').attr('type', 'button').attr('id', `season${numOfSeasons}`).attr('value', `season ${numOfSeasons}`);
+        const $seasonBtn = $('<input>').addClass('season-btns').attr('type', 'button').attr('id', `season${numOfSeasons}`).attr('value', `Season ${numOfSeasons}`);
         $('#season-btns').append($seasonBtn);
     });
     if (DEBUG) console.log(allSeasons);
@@ -238,7 +238,7 @@ const getSeasonInfo = function() {
                 allEpisodesForSeason[`episode${episodeNum}`]['episodeSum'] = episode.summary;
             });
             if (DEBUG) console.log(episodes);
-            
+
             // Log episode 2 name for testing purposes
             const e2Name = allEpisodesForSeason['episode2']['episodeSum'];
             if (DEBUG) console.log(`Season ${seasonNumber} Episode 2 of ${seriesData.name}: ${e2Name}`);
