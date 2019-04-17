@@ -5,14 +5,20 @@
     <title>TotallyTV</title>
     <!-- CSS stylesheet -->
     <link rel="stylesheet" href="./css/styles.css">
-        <!-- JQuery link -->
+    <!-- JQuery load -->
     <script
         src="https://code.jquery.com/jquery-3.3.1.min.js"
         integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
         crossorigin="anonymous">
     </script>
-    <!-- DDSlick -->
-    <script type="text/javascript" src="https://cdn.rawgit.com/jsmodules/ddslick/master/dist/jquery.ddslick.min.js" ></script>
+    <!-- JQuery UI load -->
+    <script
+      src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"
+      integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU="
+      crossorigin="anonymous">
+    </script>
+<!-- DDSlick -->
+    <!-- <script type="text/javascript" src="https://cdn.rawgit.com/jsmodules/ddslick/master/dist/jquery.ddslick.min.js" ></script> -->
     <!-- My script -->
     <script src="./js/app.js" charset="utf-8" defer='defer'></script>
 </head>
@@ -28,7 +34,7 @@
                 <form id='input-form'>
             	    <input type="text" placeholder=" name of TV show"/>
             	    <!-- <input id="searchBtn" type="submit" value="Search" /> -->
-                    <button type="submit" name="button" id="searchBtn">SEARCH</button>
+                    <button type="submit" name="button" id="searchBtn" title="Click to Search">SEARCH</button>
                 </form>
             </div>
             <section>
@@ -46,9 +52,15 @@
             </section>
         </main>
     </div>
+    <div id="episode-modal">
+        <div id="episode-modal-textbox">
+            <h1 id='show-episode-title'></h1>
+            <span id="close-text2">Click <a href="#" id="close2">CLOSE</a> to view another episode or perform another search</span>
+        </div>
+    </div>
     <div id="modal">
         <div id="modal-textbox">
-            <h1 id='show-title'>Show Title</h1>
+            <h1 id='show-title'></h1>
             <span id="close-text">Click <a href="#" id="close">CLOSE</a> to select a season or perform another search</span>
         </div>
     </div>

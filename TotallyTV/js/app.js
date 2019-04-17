@@ -1,4 +1,5 @@
-const DEBUG = true;
+const DEBUG  = true;
+const DEBUG2 = true;
 const showSearch = 'search/shows?q=';
 const api = 'https://api.tvmaze.com/';
 
@@ -10,7 +11,10 @@ let allEpisodesForSeason = {};
 let seriesData = {};
 let seasonNumber = 0;
 let seasonID = 0;
+let seasonStart = '';
+let seasonEnd = '';
 let episodes = [];
+let eleID = '';
 
 const buildModalData = function(seriesInfo) {
     if (DEBUG) console.log('INSIDE buildModalData');
@@ -45,15 +49,29 @@ const makeSeasonBtns = function(tvDataArr) {
     seasons = [];
 
     tvDataArr.forEach(function(season, i) {
-        if (DEBUG) console.log('HERE 1');
+        if (DEBUG) console.log('INSIDE callback for makeSeasonBtns');
         numOfSeasons = i + 1;
         allSeasons[`season${numOfSeasons}`] = season;
         if (DEBUG) console.log(`Season ${numOfSeasons}: ID# ${allSeasons[`season${numOfSeasons}`].id}`);
         seasons.push(`season${numOfSeasons}`);
+        eleID = `season${numOfSeasons}`;
+
+        const seasonStartDate = allSeasons[eleID].premiereDate;
+        const seasonEndDate = allSeasons[eleID].endDate;
+        const network = allSeasons[eleID].network;
+        if (DEBUG) console.log(`Season started ${seasonStartDate} and ended ${seasonEndDate}`);
+
+
         // seasonImages[`season${numOfSeasons}`] = season.image.medium;
         // const $img = $('<img>').addClass('season-pics').attr('src', season.image.medium);
         // $('#season-pics').append($img);
-        const $seasonBtn = $('<input>').addClass('season-btns').attr('type', 'button').attr('id', `season${numOfSeasons}`).attr('value', `Season ${numOfSeasons}`);
+        const $seasonBtn = $('<input>')
+            .addClass('season-btns')
+            .attr('type', 'button')
+            .attr('id', `season${numOfSeasons}`)
+            .attr('value', `Season ${numOfSeasons}`)
+            .attr('title', `Season ${numOfSeasons} of ${seriesData.name} ran from ${seasonStartDate} thru ${seasonEndDate} on ${seriesData.network}`);
+
         $('#season-btns').append($seasonBtn);
     });
     if (DEBUG) console.log(allSeasons);
@@ -65,7 +83,7 @@ const makeSeasonBtns = function(tvDataArr) {
 const getAllSeasons = function() {
     if (DEBUG) console.log('INSIDE getAllSeasons');
     const queryPath = `shows/${seriesID}/seasons`;
-    // Latest AJAX method
+    // AJAX method
     const promise = $.ajax({
         url:api + queryPath
     });
@@ -73,7 +91,7 @@ const getAllSeasons = function() {
     promise.then(
         // Success Callback function
         function(tvDataArr) {
-            if (DEBUG) console.log('running callback function');
+            if (DEBUG) console.log('running callback function for getAllSeasons');
             // Object of collected series info
             const seasonsData = tvDataArr[0];
             // const seasonImages = {};
@@ -98,8 +116,8 @@ const openModal = () => {
     $modal.css('display', 'block');
 };
 
-const displayModal = function(seriesInfo) {
-    if (DEBUG) console.log('INSIDE displayModal');
+const setupModal = function(seriesInfo) {
+    if (DEBUG) console.log('INSIDE setupModal');
     // Remove old data from modal
     $('.summary-text').remove();
 
@@ -161,36 +179,48 @@ const setBackgroundImg = function(imgURL) {
     return true;
 };
 
-const buildEpisodesModal = function () {
-    if (DEBUG) console.log('INSIDE buildEpisodesModal');
-    // allEpisodesForSeason[`episode${episodeNum}`]['episodeName']
+const buildEpisodeModal = function (event) {
+    if (DEBUG) console.log('INSIDE buildEpisodeModal');
+    const episodeNum = $(event.currentTarget).attr('id').substr(-1);
+    if (DEBUG) console.log(`episodeNum = ${episodeNum}`);
+    const episodeName = allEpisodesForSeason[`episode${episodeNum}`]['episodeName'];
+    const season = allEpisodesForSeason[`episode${episodeNum}`]['seasonNumber'];
+    const episodeDate = allEpisodesForSeason[`episode${episodeNum}`]['airDate'];
+    const runtime = allEpisodesForSeason[`episode${episodeNum}`]['runtime'];
+    const episodeSum = allEpisodesForSeason[`episode${episodeNum}`]['episodeSum'];
+    const episodeImg = allEpisodesForSeason[`episode${episodeNum}`]['episodeImg'];
+
+    // const seasonStartDate = allSeasons[`season${season}`].premiereDate;
+    // const seasonEndDate = allSeasons[`season${season}`].endDate;
+    seasonNumber = allSeasons[`season${season}`].number;
+
+    const summary = episodeSum.replace(/<\/?[^>]+(>|$)/g, "");
+    const $pSummary = $('<p>').addClass('summary-text').addClass('summary-p').text(summary);
+    $pSummary.insertAfter('#show-title');
+    if (DEBUG) console.log(`Episode Name: ${episodeName}`);
+    $('#show-title').text(episodeName);
 
     const $ul = $('<ul>').addClass('summary-text').addClass('summary-list');
-    //$ul.addClass('summary-text');
-    // status, scheduled, premiered, network
-    // let $li = $('<li>').text(`Status: ${seriesInfo.status}`);
-    let $li = $('<li><span class="heading">Status: </span>' + seriesInfo.status + '</li>');
+
+    let $li = $('<li><span class="heading">Title: </span>' + episodeName + '</li>');
     $($ul).append($li);
-    if (DEBUG) console.log(`schedule string: "${seriesInfo.schedule}"`);
-    seriesInfo.schedule = seriesInfo.schedule == 'undefined ' ? 'N/A' : seriesInfo.schedule;
+    //if (DEBUG) console.log(`schedule string: "${seriesInfo.schedule}"`);
+    //seriesInfo.schedule = seriesInfo.schedule == 'undefined ' ? 'N/A' : seriesInfo.schedule;
     // $li = $('<li>').text(`Schedule: ${seriesInfo.schedule}`);
-    $li = $('<li><span class="heading">Schedule: </span>' + seriesInfo.schedule + '</li>');
+    $li = $('<li><span class="heading">Schedule: </span>' + '?' + '</li>');
     $($ul).append($li);
     // $li = $('<li>').text(`Premiered: ${seriesInfo.premiered}`);
-    $li = $('<li><span class="heading">Premiered: </span>' + seriesInfo.premiered + '</li>');
+    $li = $('<li><span class="heading">Air Date: </span>' + episodeDate + '</li>');
     $($ul).append($li);
     // $li = $('<li>').text(`Network: ${seriesInfo.network}`);
-    $li = $('<li><span class="heading">Network: </span>' + seriesInfo.network + '</li>');
+    $li = $('<li><span class="heading">Network: </span>' + '?' + '</li>');
     $($ul).append($li);
     // Append UL after summary paragraph
     $('.summary-p').append($ul);
     $('li').css('list-style-type', 'none');
+    setTimeout(openModal, 0);
 };
-
-const onEpisodeClick = function() {
-    if (DEBUG) console.log('INSIDE onEpisodeClick');
-
-};
+$('#close2').on('click', closeModal);
 
 const makeEpisodeOptions = function() {
     if (DEBUG) console.log('INSIDE makeEpisodeOptions');
@@ -206,8 +236,8 @@ const makeEpisodeOptions = function() {
         const $episodeOpt = $('<option>').addClass('episode-options').attr('data-description', `episode${i + 1}`).attr('value', `episode${i + 1}`).attr('id', `episode${i + 1}`).text(`Episode ${i + 1} - ${episodeText}`);
         $select.append($episodeOpt);
     });
-    // Setup listener for when a season button is clicked
-    $('.episode-options').on('click', onEpisodeClick);
+    // Setup listener for when an episode button is clicked
+    $('.episode-options').on('click', buildEpisodeModal);
 }
 
 const getSeasonInfo = function() {
@@ -227,11 +257,12 @@ const getSeasonInfo = function() {
             seasonArr.forEach(function(episode, i) {
                 const episodeNum = i + 1;
                 episodes.push(`episode${episodeNum}`);
-
                 allEpisodesForSeason[`episode${episodeNum}`] = {};
                 allEpisodesForSeason[`episode${episodeNum}`]['episodeName'] = episode.name;
                 allEpisodesForSeason[`episode${episodeNum}`]['seasonNumber'] = episode.season;
                 allEpisodesForSeason[`episode${episodeNum}`]['episodeNumber'] = episode.number;
+                allEpisodesForSeason[`episode${episodeNum}`]['airDate'] = episode.airdate;
+                allEpisodesForSeason[`episode${episodeNum}`]['runtime'] = episode.runtime;
                 if (episode.image) {
                     allEpisodesForSeason[`episode${episodeNum}`]['episodeImg'] = episode.image.medium;
                 }
@@ -243,9 +274,7 @@ const getSeasonInfo = function() {
             const e2Name = allEpisodesForSeason['episode2']['episodeSum'];
             if (DEBUG) console.log(`Season ${seasonNumber} Episode 2 of ${seriesData.name}: ${e2Name}`);
 
-            //makeEpisodeBtns();
             makeEpisodeOptions();
-            //buildEpisodesModal();
 
             // $('#runtime').html(data.Runtime);
             // $('#imdb-rating').html(data.imdbRating);
@@ -264,19 +293,39 @@ const onSeasonClick = function(event) {
     const seasonStartDate = allSeasons[eleID].premiereDate;
     const seasonEndDate = allSeasons[eleID].endDate;
     seasonNumber = allSeasons[eleID].number;
-    //getSeasonInfo(seasonNumber, seasonID);
     getSeasonInfo();
 };
+
+//////////////////////////////
+// Execution order:
+//      main code block
+//      getSeriesInfo
+//      setBackgroundImg
+//      setupModal
+//      buildModalData
+//      openModal
+//      closeModal
+//      getAllSeasons
+//      makeSeasonBtns
+//      onSeasonClick
+//      getSeasonInfo
+//      makeEpisodeOptions
+//      buildEpisodeModal
+//////////////////////////////
 
 //////////
 // main //
 //////////
-if (DEBUG) console.log('WAITING for SEARCH click');
+
+if (DEBUG) console.log('In main block WAITING for SEARCH click');
 $('form').on('submit', function(event) {
     $('body > img').remove();
     $('.season-btns').remove();
     $('.episode-options').remove();
     $('#episode-container').remove();
+
+    $('.season-btns').tooltip();
+    $('#searchBtn').tooltip();
 
     seasons = [];
     allSeasons = {};
@@ -299,11 +348,7 @@ $('form').on('submit', function(event) {
             // Object of collected series info
             const seriesData = getSeriesInfo(tvDataArr);
             setBackgroundImg(seriesData.mainImage);
-            displayModal(seriesData);
-            // makeSeasonBtns(tvDataArr);
-
-            // $('#runtime').html(data.Runtime);
-            // $('#imdb-rating').html(data.imdbRating);
+            setupModal(seriesData);
         },
         // Failure Callback function
         function() {

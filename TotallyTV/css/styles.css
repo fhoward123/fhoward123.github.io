@@ -100,10 +100,10 @@ div#background {
     display: inline-block;
     position: relative;
 }
-#show-title {
+#show-title, #show-episode-title {
     font-family : 'Righteous', cursive;
 }
-#modal {
+#modal, #episode-modal {
 	background-color : rgba(0, 50, 100, 0.4);
 	position   : fixed;
 	top        : 35%;
@@ -115,7 +115,7 @@ div#background {
     text-align : center;
     overflow-y : auto;
 }
-#modal-textbox {
+#modal-textbox, #episode-modal-textbox {
     background-color : azure;
     font-family   : 'Nunito';
     text-align    : center;
@@ -225,7 +225,7 @@ div#background {
     box-sizing: border-box;
     z-index: -1;
 }
-#close-text, #close {
+#close-text, #close, #close-text2, #close2 {
     margin: 50px 0;
 }
 #close {
@@ -235,9 +235,20 @@ div#background {
     border-style: none;
     font-weight: 300;
 }
+#close2 {
+    background-color: #8dcafc;
+    padding: 0.2em 0.4em;
+    text-decoration: none;
+    border-style: none;
+    font-weight: 300;
+}
 #close:visited {
     color: black;
 }
+#close2:visited {
+    color: black;
+}
+
 ul {
     padding: 0 0 2em 0;
 }
