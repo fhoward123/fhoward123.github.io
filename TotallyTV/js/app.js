@@ -16,6 +16,8 @@ let seasonEnd = '';
 let episodes = [];
 let eleID = '';
 let $modelID = '';
+let $searchResults = [];
+const allShows = {};
 
 const buildModalData = function(seriesInfo) {
     if (DEBUG) console.log('INSIDE buildModalData');
@@ -105,10 +107,18 @@ const getAllSeasons = function() {
         }
     );
 };
-//const $modal = $('#modal');
 
-const closeModal = () => {
-    if (DEBUG) console.log('INSIDE closeModal');
+const closeEpisodeModal = () => {
+    if (DEBUG) console.log('INSIDE closeEpisodeModal');
+    $modal.css('display', 'none');
+    // Remove old data from modal
+    $('.summary-text').remove();
+    $('.summary-list').remove();
+    $('.summary-p').remove();
+}
+
+const closeSeriesModal = () => {
+    if (DEBUG) console.log('INSIDE closeSeriesModal');
     $modal.css('display', 'none');
     // Remove old data from modal
     $('.summary-text').remove();
@@ -140,46 +150,57 @@ const setupModal = function(seriesInfo) {
     buildModalData(seriesInfo);
     setTimeout(openModal, 2000);
 };
-$('#close').on('click', closeModal);
+$('#close').on('click', closeSeriesModal);
 
-const getSeriesInfo = function(tvDataArr) {
+const getSeriesInfo = function(event) {
     if (DEBUG) console.log('INSIDE getSeriesInfo');
-    if (DEBUG) console.log(tvDataArr);
+    seriesID = $(event.currentTarget).attr('value');
+
+    // Remove select option menu
+    $('#show-container').remove();
+    $('.series-options').remove();
+
+    if (DEBUG) console.log(`Click value: ${seriesID}`);
     // Object to hold gleaned data from TVMaze
     seriesData = {};
-    const showIdx = 0;
-    seriesID = seriesData.id = tvDataArr[showIdx].show.id;
+    // Hardcoded to first result for testing --- NEED TO FIX ***********
+    const showIdx = allShows[seriesID];
+    seriesID = seriesData.id = searchResults[showIdx].show.id;
     if (DEBUG) console.log(`Series ID: ${seriesData.id}`);
-    seriesData.name = tvDataArr[showIdx].show.name;
+    seriesData.name = searchResults[showIdx].show.name;
     if (DEBUG) console.log(`Series Name: ${seriesData.name}`);
-    if (DEBUG) console.log(tvDataArr[showIdx]);
-    seriesData.mainImage = tvDataArr[showIdx].show.image.original;
+    if (DEBUG) console.log(searchResults[showIdx]);
+    seriesData.mainImage = searchResults[showIdx].show.image.original;
     if (DEBUG) console.log(seriesData.mainImage);
-    seriesData.seriesSummary = tvDataArr[showIdx].show.summary;
+    seriesData.seriesSummary = searchResults[showIdx].show.summary;
     if (DEBUG) console.log(`Summary: ${seriesData.seriesSummary}`);
 
-    seriesData.status = tvDataArr[showIdx].show.status;
+    seriesData.status = searchResults[showIdx].show.status;
     if (DEBUG) console.log(`Status: ${seriesData.status}`);
 
     // If series is ended then no current air date/time
     if ( status !== 'Ended' ) {
-        const day = tvDataArr[showIdx].show.schedule.days[0];
-        const time = tvDataArr[showIdx].show.schedule.time;
+        const day = searchResults[showIdx].show.schedule.days[0];
+        const time = searchResults[showIdx].show.schedule.time;
         seriesData.schedule = `${day} ${time}`;
     }
     if (DEBUG) console.log(`Schedule: ${seriesData.schedule}`);
-    seriesData.premiered = tvDataArr[showIdx].show.premiered;
+    seriesData.premiered = searchResults[showIdx].show.premiered;
     if (DEBUG) console.log(`Premier Date: ${seriesData.premiered}`);
-    const network = tvDataArr[showIdx].show.network;
+    const network = searchResults[showIdx].show.network;
     if (network) {
-        seriesData.network = tvDataArr[showIdx].show.network.name ? tvDataArr[showIdx].show.network.name : '';
+        seriesData.network = searchResults[showIdx].show.network.name ? searchResults[showIdx].show.network.name : '';
     }
     if (DEBUG) console.log(`Network: ${seriesData.network}`);
-    return seriesData;
+    //return seriesData;
+
+    setBackgroundImg(seriesData.mainImage);
+    setupModal(seriesData);
 };
 
 const setBackgroundImg = function(imgURL) {
     if (DEBUG) console.log('INSIDE setBackgroundImg');
+//    $('body').remove($('img'));
     const $img = $('<img>');
     $img.addClass('back-img');
     $img.attr('src', imgURL);
@@ -236,7 +257,7 @@ const buildEpisodeModal = function (event) {
     $modal = $('#episode-modal');
     setTimeout(openModal, 0);
 };
-$('#close2').on('click', closeModal);
+$('#close2').on('click', closeEpisodeModal);
 
 const makeEpisodeOptions = function() {
     if (DEBUG) console.log('INSIDE makeEpisodeOptions');
@@ -256,7 +277,7 @@ const makeEpisodeOptions = function() {
     $('.episode-options').on('click', buildEpisodeModal);
 }
 
-const getSeasonInfo = function() {
+const getSeasonInfo = function(event) {
     if (DEBUG) console.log('INSIDE getSeasonInfo');
     if (DEBUG) console.log(`Getting info for Season: ${seasonNumber}`);
     const queryPath = `seasons/${seasonID}/episodes`;
@@ -287,9 +308,6 @@ const getSeasonInfo = function() {
             if (DEBUG) console.log(episodes);
 
             makeEpisodeOptions();
-
-            // $('#runtime').html(data.Runtime);
-            // $('#imdb-rating').html(data.imdbRating);
         },
         // Failure Callback function
         function() {
@@ -308,9 +326,54 @@ const onSeasonClick = function(event) {
     getSeasonInfo();
 };
 
+const pickShow = function(arrayOfShows) {
+    if (DEBUG) console.log('INSIDE pickShow');
+    const listOfShows = [];
+
+    const $select = $('<select>')
+        .attr('name', 'show-container')
+        .attr('size', 8)
+        .attr('id', 'show-container');
+
+    const $label = $('<label>')
+        .addClass('series-options')
+        .attr('for', 'show-container')
+        .text('Search Results: (Select One)');
+
+    $('fieldset').append($label);
+    $('fieldset').append($select);
+    const $opt = $('<option disabled selected>'); //.attr('disabled').attr('selected');
+    $select.append($opt);
+
+    arrayOfShows.forEach(function(series, i) {
+        seriesIdString = '' + series.show.id;
+        allShows[series.show.name] = seriesIdString;
+        allShows[seriesIdString] = i;
+        listOfShows.push(series.show.name);
+        if (DEBUG2) console.log(`Adding series number: ${allShows[series.show.name]}`);
+
+        const $showOpt = $('<option>')
+            .addClass('series-options')
+            .attr('value', seriesIdString)
+            .text(series.show.name);
+
+        $select.append($showOpt);
+    });
+    // Show list of fuzzy search results of user's input text
+    if (DEBUG2) console.log(Object.keys(allShows));
+
+    // Make options visible
+    //$select.attr('style', 'display: contents');
+    //$('#show-container').selectmenu();
+
+    // Setup listener for when an episode button is clicked
+    $('.series-options').on('click', getSeriesInfo);
+}
+
 //////////////////////////////
 // Execution order:
 //      main code block
+//      pickShow
 //      getSeriesInfo
 //      setBackgroundImg
 //      setupModal
@@ -355,7 +418,7 @@ $('form').on('submit', function(event) {
     allSeasons = {};
 
     event.preventDefault();
-    // Select all input items with attribute "type" = "text" in HTML
+    // Select input item with attribute "type" = "text" in HTML
     let showName = $('input[type="text"]').val();
     //showName = titleCase(showName);
     if (DEBUG) console.log(showName);
@@ -369,10 +432,13 @@ $('form').on('submit', function(event) {
         // Success Callback function
         function(tvDataArr) {
             if (DEBUG) console.log('INSIDE initial PROMISE function');
+            searchResults = tvDataArr;
             // Object of collected series info
-            const seriesData = getSeriesInfo(tvDataArr);
-            setBackgroundImg(seriesData.mainImage);
-            setupModal(seriesData);
+            pickShow(searchResults);
+            // How to get back here???
+            // const seriesData = getSeriesInfo(tvDataArr[idx]);
+            // setBackgroundImg(seriesData.mainImage);
+            // setupModal(seriesData);
         },
         // Failure Callback function
         function() {
