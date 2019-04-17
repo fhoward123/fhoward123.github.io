@@ -15,6 +15,7 @@ let seasonStart = '';
 let seasonEnd = '';
 let episodes = [];
 let eleID = '';
+let $modelID = '';
 
 const buildModalData = function(seriesInfo) {
     if (DEBUG) console.log('INSIDE buildModalData');
@@ -103,11 +104,16 @@ const getAllSeasons = function() {
         }
     );
 };
-const $modal = $('#modal');
+//const $modal = $('#modal');
 
 const closeModal = () => {
     if (DEBUG) console.log('INSIDE closeModal');
     $modal.css('display', 'none');
+    // Remove old data from modal
+    $('.summary-text').remove();
+    $('.summary-list').remove();
+    $('.summary-p').remove();
+
     getAllSeasons();
 }
 
@@ -120,6 +126,8 @@ const setupModal = function(seriesInfo) {
     if (DEBUG) console.log('INSIDE setupModal');
     // Remove old data from modal
     $('.summary-text').remove();
+    $('.summary-list').remove();
+    $('.summary-p').remove();
 
     // Strip out the HTML embedded in the summaries
     const summary = seriesInfo.seriesSummary.replace(/<\/?[^>]+(>|$)/g, "");
@@ -127,6 +135,7 @@ const setupModal = function(seriesInfo) {
     $pSummary.insertAfter('#show-title');
     if (DEBUG) console.log(`Series Name: ${seriesInfo.name}`);
     $('#show-title').text(seriesInfo.name);
+    $modal = $('#modal');
     buildModalData(seriesInfo);
     setTimeout(openModal, 2000);
 };
@@ -181,7 +190,15 @@ const setBackgroundImg = function(imgURL) {
 
 const buildEpisodeModal = function (event) {
     if (DEBUG) console.log('INSIDE buildEpisodeModal');
-    const episodeNum = $(event.currentTarget).attr('id').substr(-1);
+    // Remove old data from modal
+    $('.summary-text').remove();
+    $('.summary-list').remove();
+    $('.summary-p').remove();
+
+    let episodeNum = $(event.currentTarget).attr('id').slice(-2);
+    if ( isNaN(episodeNum) ) {
+        episodeNum = $(event.currentTarget).attr('id').substr(-1);
+    }
     if (DEBUG) console.log(`episodeNum = ${episodeNum}`);
     const episodeName = allEpisodesForSeason[`episode${episodeNum}`]['episodeName'];
     const season = allEpisodesForSeason[`episode${episodeNum}`]['seasonNumber'];
@@ -196,9 +213,9 @@ const buildEpisodeModal = function (event) {
 
     const summary = episodeSum.replace(/<\/?[^>]+(>|$)/g, "");
     const $pSummary = $('<p>').addClass('summary-text').addClass('summary-p').text(summary);
-    $pSummary.insertAfter('#show-title');
+    $pSummary.insertAfter('#show-episode-title');
     if (DEBUG) console.log(`Episode Name: ${episodeName}`);
-    $('#show-title').text(episodeName);
+    $('#show-episode-title').text(episodeName);
 
     const $ul = $('<ul>').addClass('summary-text').addClass('summary-list');
 
@@ -218,6 +235,8 @@ const buildEpisodeModal = function (event) {
     // Append UL after summary paragraph
     $('.summary-p').append($ul);
     $('li').css('list-style-type', 'none');
+
+    $modal = $('#episode-modal');
     setTimeout(openModal, 0);
 };
 $('#close2').on('click', closeModal);
@@ -318,7 +337,19 @@ const onSeasonClick = function(event) {
 //////////
 
 if (DEBUG) console.log('In main block WAITING for SEARCH click');
+// $(event.target).effect('bounce', 'fast');
+
 $('form').on('submit', function(event) {
+    // Reject empty input text
+    // if ( $('input[type="text"]').val() === null || $('input[type="text"]').val().match(/^ *$/) !== null ) {
+        // $('#input-box').val("");
+        // $(event.currentTarget).effect('bounce', 'fast');
+        // totallyTV();
+    // }
+    // else {
+    //     jQuery.fx.off = true;
+    // }
+
     $('body > img').remove();
     $('.season-btns').remove();
     $('.episode-options').remove();
@@ -356,6 +387,7 @@ $('form').on('submit', function(event) {
         }
     );
 });
+
 
 
 
