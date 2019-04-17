@@ -59,7 +59,8 @@ const makeSeasonBtns = function(tvDataArr) {
 
         const seasonStartDate = allSeasons[eleID].premiereDate;
         const seasonEndDate = allSeasons[eleID].endDate;
-        const network = allSeasons[eleID].network;
+        const network = allSeasons[eleID].network.name;
+        const numOfEpisodes = allSeasons[eleID].episodeOrder;
         if (DEBUG) console.log(`Season started ${seasonStartDate} and ended ${seasonEndDate}`);
 
 
@@ -71,7 +72,7 @@ const makeSeasonBtns = function(tvDataArr) {
             .attr('type', 'button')
             .attr('id', `season${numOfSeasons}`)
             .attr('value', `Season ${numOfSeasons}`)
-            .attr('title', `Season ${numOfSeasons} of ${seriesData.name} ran from ${seasonStartDate} thru ${seasonEndDate} on ${seriesData.network}`);
+            .attr('title', `Season ${numOfSeasons} of ${seriesData.name} consisted of ${numOfEpisodes} episodes and ran from ${seasonStartDate} thru ${seasonEndDate} on ${network}`);
 
         $('#season-btns').append($seasonBtn);
     });
@@ -146,8 +147,6 @@ const getSeriesInfo = function(tvDataArr) {
     if (DEBUG) console.log(tvDataArr);
     // Object to hold gleaned data from TVMaze
     seriesData = {};
-    // Find title match to data entered
-    // const showIdx = findShowIdx(tvDataArr, showName);
     const showIdx = 0;
     seriesID = seriesData.id = tvDataArr[showIdx].show.id;
     if (DEBUG) console.log(`Series ID: ${seriesData.id}`);
@@ -195,6 +194,7 @@ const buildEpisodeModal = function (event) {
     $('.summary-list').remove();
     $('.summary-p').remove();
 
+    // Check if episode is 2 digits or just 1
     let episodeNum = $(event.currentTarget).attr('id').slice(-2);
     if ( isNaN(episodeNum) ) {
         episodeNum = $(event.currentTarget).attr('id').substr(-1);
@@ -206,10 +206,10 @@ const buildEpisodeModal = function (event) {
     const runtime = allEpisodesForSeason[`episode${episodeNum}`]['runtime'];
     const episodeSum = allEpisodesForSeason[`episode${episodeNum}`]['episodeSum'];
     const episodeImg = allEpisodesForSeason[`episode${episodeNum}`]['episodeImg'];
+    const network = allSeasons[`season${season}`].network.name;
 
-    // const seasonStartDate = allSeasons[`season${season}`].premiereDate;
-    // const seasonEndDate = allSeasons[`season${season}`].endDate;
-    seasonNumber = allSeasons[`season${season}`].number;
+    // Update global
+    seasonNumber = season;
 
     const summary = episodeSum.replace(/<\/?[^>]+(>|$)/g, "");
     const $pSummary = $('<p>').addClass('summary-text').addClass('summary-p').text(summary);
@@ -219,18 +219,15 @@ const buildEpisodeModal = function (event) {
 
     const $ul = $('<ul>').addClass('summary-text').addClass('summary-list');
 
-    let $li = $('<li><span class="heading">Title: </span>' + episodeName + '</li>');
+    let $li = $('<li><span class="heading">Season: </span>' + season + '</li>');
     $($ul).append($li);
-    //if (DEBUG) console.log(`schedule string: "${seriesInfo.schedule}"`);
-    //seriesInfo.schedule = seriesInfo.schedule == 'undefined ' ? 'N/A' : seriesInfo.schedule;
-    // $li = $('<li>').text(`Schedule: ${seriesInfo.schedule}`);
-    $li = $('<li><span class="heading">Schedule: </span>' + '?' + '</li>');
+    $li = $('<li><span class="heading">Episode: </span>' + episodeNum + '</li>');
     $($ul).append($li);
-    // $li = $('<li>').text(`Premiered: ${seriesInfo.premiered}`);
+    $li = $('<li><span class="heading">Runtime: </span>' + runtime + ' minutes</li>');
+    $($ul).append($li);
     $li = $('<li><span class="heading">Air Date: </span>' + episodeDate + '</li>');
     $($ul).append($li);
-    // $li = $('<li>').text(`Network: ${seriesInfo.network}`);
-    $li = $('<li><span class="heading">Network: </span>' + '?' + '</li>');
+    $li = $('<li><span class="heading">Network: </span>' + network + '</li>');
     $($ul).append($li);
     // Append UL after summary paragraph
     $('.summary-p').append($ul);
@@ -288,10 +285,6 @@ const getSeasonInfo = function() {
                 allEpisodesForSeason[`episode${episodeNum}`]['episodeSum'] = episode.summary;
             });
             if (DEBUG) console.log(episodes);
-
-            // Log episode 2 name for testing purposes
-            const e2Name = allEpisodesForSeason['episode2']['episodeSum'];
-            if (DEBUG) console.log(`Season ${seasonNumber} Episode 2 of ${seriesData.name}: ${e2Name}`);
 
             makeEpisodeOptions();
 
