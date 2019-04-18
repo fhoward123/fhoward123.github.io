@@ -154,7 +154,7 @@ const setupModal = function(seriesInfo) {
     $('#show-title').text(seriesInfo.name);
     $modal = $('#modal');
     buildModalData(seriesInfo);
-    setTimeout(openModal, 3000);
+    setTimeout(openModal, 2300);
 };
 $('#close').on('click', closeSeriesModal);
 
@@ -348,8 +348,6 @@ const pickShow = function(arrayOfShows) {
 
     $('fieldset').append($label);
     $('fieldset').append($select);
-    // const $opt = $('<option disabled selected>');
-    // $select.append($opt);
 
     arrayOfShows.forEach(function(series, i) {
         seriesIdString = '' + series.show.id;

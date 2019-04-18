@@ -48,19 +48,29 @@ input {
     font-weight: 700;
     padding-bottom: 0.2em;
 }
+
+@media (max-width: 320px) {
+    #main-title {
+        max-width: 310px;
+    }
+}
+
 #main-title {
     color: blue;
     background-color: azure;
     width: inherit;
     font-style: italic;
+    margin-left: 0;
 }
 #title {
     color: #7f13d8;
     font-style: normal;
+    margin-right: 0;
 }
 h1 {
     font-size: calc(1.9em + 0.6vw);
-    padding: 10px;
+    padding: 7px;
+    margin: 15px 15px 15px 15px;
 }
 @media (max-width: 320px) {
     h1 {
@@ -79,9 +89,29 @@ h1 {
 }
 
 #season-btns {
-    max-width : 35em;
+    max-width : 30em;
     display: inline-block;
 }
+
+@media (max-width: 414px) {
+    #season-btns {
+        max-width : 20em;
+        display: inline-block;
+    }
+}
+@media (max-width: 375px) {
+    #season-btns {
+        max-width : 25em;
+        display: inline-block;
+    }
+}
+@media (max-width: 320px) {
+    #season-btns {
+        max-width : 25em;
+        display: inline-block;
+    }
+}
+
 .season-btns {
     padding: 0.3em 0.4em 0.3em 0.4em;
     background: azure;
@@ -134,13 +164,91 @@ div#background {
 	box-shadow    : 0px 2px 2px rgba(0, 0, 0, 0.2);
 }
 
-.episode-container, .show-container {
-    text-align: center;
+@media (max-width: 414px) {
+    #modal-textbox, #episode-modal-textbox {
+        background-color : azure;
+        font-family   : 'Nunito';
+        text-align    : center;
+    	height        : auto;
+    	width         : 340px;
+    	border-radius : 2px;
+    	margin        : 22px auto;
+        padding       : 10px 10px 10px 10px;
+    	box-shadow    : 0px 2px 2px rgba(0, 0, 0, 0.2);
+    }
+}
+@media (max-width: 375px) {
+    #modal-textbox, #episode-modal-textbox {
+        background-color : azure;
+        font-family   : 'Nunito';
+        text-align    : center;
+    	height        : auto;
+    	width         : 300px;
+    	border-radius : 2px;
+    	margin        : 38px auto;
+        padding       : 10px 10px 10px 10px;
+    	box-shadow    : 0px 2px 2px rgba(0, 0, 0, 0.2);
+    }
+}
+@media (max-width: 320px) {
+    #modal-textbox, #episode-modal-textbox {
+        background-color : azure;
+        font-family   : 'Nunito';
+        text-align    : center;
+    	height        : auto;
+    	width         : 240px;
+    	border-radius : 2px;
+    	margin        : 25px auto;
+        padding       : 10px 10px 10px 10px;
+    	box-shadow    : 0px 2px 2px rgba(0, 0, 0, 0.2);
+    }
+}
+
+#episode-container, .show-container {
     background-color: blue;
+    margin-left: 0;
+}
+@media (max-width: 414px) {
+    #episode-container {
+        width: 375px;
+        margin-left: 1.4em;
+    }
+}
+@media (max-width: 375px) {
+    #episode-container {
+        width: 340px;
+        margin-left: 1.1em;
+    }
+}
+@media (max-width: 320px) {
+    #episode-container {
+        width: 300px;
+        margin-left: 10.0;
+    }
+}
+
+@media (max-width: 414px) {
+    #show-container {
+        width: 360px;
+        margin-right: 6.0em;
+    }
+}
+@media (max-width: 375px) {
+    #show-container  {
+        width: 320px;
+        margin-right: 6.0em;
+    }
+}
+@media (max-width: 320px) {
+    #show-container  {
+        width: 280px;
+        margin-right: 3.0em;
+    }
 }
 
 #episode-options, #series-options {
     margin-top: 2em;
+    display: block;
 }
 .series-options {
     font-family: 'Doppio One', cursive;
@@ -151,18 +259,47 @@ div#background {
     font-size: 0.9em;
 }
 .episode-options, .series-options {
-    /* font-family: 'Paprika', cursive; */
     background-color: azure;
-    width: 340px;
-    white-space: pre;
-    padding: 0.2em 0 0.2em 0.4em;
+    width: 400px;
+    padding: 0.2em 0.4 0.2em 0.4em;
 }
+
+@media (max-width: 414px) {
+    #episode-options, .episode-options, .series-options {
+        width: 360px;
+    }
+}
+@media (max-width: 375px) {
+    #episode-options, .episode-options, .series-options {
+        width: 340px;
+    }
+}
+@media (max-width: 320px) {
+    #episode-options, .episode-options, .series-options {
+        width: 300px;
+    }
+}
+
 .episode-options:hover, .series-options:hover {
     background: darkviolet;
     text-decoration: none;
     color: white;
     cursor: pointer;
     text-transform: uppercase;
+}
+
+#modal-textbox {
+    background-color: azure;
+    font-family   : 'Nunito';
+    text-align    : center;
+    height        : auto;
+    max-width     : 340px;
+    border-radius : 2px;
+    margin        : 0px auto;
+    padding       : 20px 10px 10px 10px;
+    box-shadow    : 0px 2px 2px rgba(0, 0, 0, 0.2);
+    display: inline-block;
+    width: 340px;
 }
 
 @media (max-width: 414px) {
@@ -252,6 +389,61 @@ label {
     box-sizing: border-box;
     z-index: -1;
 }
+@media (max-width: 414px) {
+    .back-img {
+        width: 380px;
+        height: 90%;
+        content: "";
+        padding: 0.5em 0 0 0;
+        opacity: 0.5;
+        top: 7em;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        position: absolute;
+        display: block;
+        margin: auto;
+        box-sizing: border-box;
+        z-index: -1;
+    }
+}
+@media (max-width: 375px) {
+    .back-img {
+        width: 350px;
+        height: 90%;
+        content: "";
+        padding: 0.5em 0 0 0;
+        opacity: 0.5;
+        top: 7em;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        position: absolute;
+        display: block;
+        margin: auto;
+        box-sizing: border-box;
+        z-index: -1;
+    }
+}
+@media (max-width: 320px) {
+    .back-img {
+        width: 300px;
+        height: 90%;
+        content: "";
+        padding: 0.5em 0 0 0;
+        opacity: 0.5;
+        top: 7em;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        position: absolute;
+        display: block;
+        margin: auto;
+        box-sizing: border-box;
+        z-index: -1;
+    }
+}
+
 #close-text, #close, #close-text2, #close2 {
     margin: 50px 0;
 }
@@ -292,14 +484,14 @@ ul {
 
 @media (max-width: 414px) {
     .tv-1 {
-        height: 55px;
-        width: 55px;
+        height: 66px;
+        width: 66px;
         padding: 0 0.2em 0 0
     }
     .tv-2 {
-        height: 33px;
-        width: 50px;
-        padding: 0.8em 0.3em 0 1em;
+        height: 39px;
+        width: 60px;
+        padding: 1.1em 0.3em 0 1em;
     }
 }
 
@@ -312,20 +504,20 @@ ul {
     .tv-2 {
         height: 40px;
         width: 60px;
-        padding: 0.8em 0.3em 0 1em;
+        padding: 1.0em 0 0 0.4em;
     }
 }
 
 @media (max-width: 320px) {
     .tv-1 {
-        height: 66px;
-        width: 66px;
+        height: 55px;
+        width: 55px;
         padding: 0 0.3em 0 0
     }
     .tv-2 {
-        height: 40px;
-        width: 60px;
-        padding: 0.8em 0.3em 0 1em;
+        height: 33px;
+        width: 50px;
+        padding: 0.8em 0.3em 0 0;
     }
 }
 
