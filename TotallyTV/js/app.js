@@ -271,7 +271,7 @@ const makeEpisodeOptions = function() {
     $('.episode-options').remove();
     $('#episode-container').remove();
 
-    const $select = $('<select>').attr('id', 'episode-container').attr('size', 8);
+    const $select = $('<select>').attr('id', 'episode-container').attr('size', 4);
     $('#episode-options').append($select);
 
     episodes.forEach(function(episode, i) {
@@ -343,14 +343,13 @@ const pickShow = function(arrayOfShows) {
         .attr('id', 'show-container');
 
     const $label = $('<label>')
-        // .addClass('series-options')
         .attr('for', 'show-container')
         .text('Search Results: (Select One)');
 
     $('fieldset').append($label);
     $('fieldset').append($select);
-    const $opt = $('<option disabled selected>'); //.attr('disabled').attr('selected');
-    $select.append($opt);
+    // const $opt = $('<option disabled selected>');
+    // $select.append($opt);
 
     arrayOfShows.forEach(function(series, i) {
         seriesIdString = '' + series.show.id;

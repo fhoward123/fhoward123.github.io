@@ -79,13 +79,14 @@ h1 {
 }
 
 #season-btns {
-    max-width : 38em;
+    max-width : 35em;
     display: inline-block;
 }
 .season-btns {
-    padding: 0.5em;
+    padding: 0.3em 0.4em 0.3em 0.4em;
     background: azure;
     border-radius: 28px;
+    font-size: 0.8em;
 }
 .season-btns:hover, .season-btns:active {
     background: #7f13d8;
@@ -107,6 +108,7 @@ div#background {
 }
 #show-title, #show-episode-title {
     font-family : 'Righteous', cursive;
+    margin: 0 0 0.2em 0;
 }
 #modal, #episode-modal {
 	background-color : rgba(0, 50, 100, 0.4);
@@ -146,14 +148,14 @@ div#background {
 }
 .episode-options {
     font-family: 'Paprika', cursive;
-    font-size: 1.0em;
+    font-size: 0.9em;
 }
 .episode-options, .series-options {
     /* font-family: 'Paprika', cursive; */
     background-color: azure;
     width: 340px;
     white-space: pre;
-    padding: 0.3em 0 0.3em 0.4em;
+    padding: 0.2em 0 0.2em 0.4em;
 }
 .episode-options:hover, .series-options:hover {
     background: darkviolet;
