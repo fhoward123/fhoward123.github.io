@@ -1,13 +1,10 @@
-/* Import some fonts */
+/* Import  fonts */
 @import url('https://fonts.googleapis.com/css?family=Dosis|Nunito');
-@import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600');
-@import url('https://fonts.googleapis.com/css?family=Abril+Fatface|Assistant');
+/* font-family   : 'Nunito'; */
 @import url('https://fonts.googleapis.com/css?family=Righteous');
 /* font-family : 'Righteous', cursive; */
 @import url('https://fonts.googleapis.com/css?family=Orbitron');
 /* font-family: 'Orbitron', sans-serif; */
-@import url('https://fonts.googleapis.com/css?family=Muli:700');
-/* font-family: 'Muli', sans-serif; */
 @import url('https://fonts.googleapis.com/css?family=Muli:700|Paprika');
 /* font-family: 'Muli', sans-serif; */
 /* font-family: 'Paprika', cursive; */
@@ -43,6 +40,33 @@ input {
     font-size: 14px;
     font-weight: 200;
 }
+
+footer {
+    position: relative;
+    text-align: center;
+    bottom: 3em;
+    background-color: azure;
+    width: 110px;
+    font-size: 12px;
+    /* centers footer horizontally */
+    margin: 0 auto;
+    border-style: ridge;
+    border-radius: 1em;
+    border-width: medium;
+}
+#dialog {
+    background-color: #ebdcff;
+    margin-block-start: 10px;
+    text-align: center;
+    border-style: ridge;
+    border-radius: 1em;
+    border-width: medium;
+    font-family: 'Muli';
+}
+#line-1 {
+    line-height: 2em;
+}
+
 #main-title, #title {
     font-family : 'Orbitron', sans-serif;
     font-weight: 700;
@@ -70,7 +94,7 @@ input {
 h1 {
     font-size: calc(1.9em + 0.6vw);
     padding: 7px;
-    margin: 15px 15px 15px 15px;
+    margin-bottom: 5px;
 }
 @media (max-width: 320px) {
     h1 {
@@ -78,7 +102,7 @@ h1 {
     }
 }
 
-#searchBtn {
+#searchBtn, .ui-button {
     margin: 1em;
     padding: 0.3em 1em;
     border-radius: .5em;
@@ -86,6 +110,10 @@ h1 {
     font-weight: 900;
     font-size: 1.5vh;
     font-family: 'Muli', sans-serif;
+}
+.ui-button {
+    margin: auto;
+    color: red;
 }
 
 #season-btns {
@@ -117,6 +145,7 @@ h1 {
     background: azure;
     border-radius: 28px;
     font-size: 0.8em;
+    border-color: #7f13d8;    
 }
 .season-btns:hover, .season-btns:active {
     background: #7f13d8;
@@ -141,17 +170,63 @@ div#background {
     margin: 0 0 0.2em 0;
 }
 #modal, #episode-modal {
-	background-color : rgba(0, 50, 100, 0.4);
+	/* background-color : rgba(0, 50, 100, 0.4); */
+    background-size: contain;
 	position   : fixed;
-	top        : 35%;
+	top        : 45%;
     left       : 50%;
     transform  : translate(-50%, -50%);
-	width      : 100%;
-	max-height : calc(100vh - 13em);
+
+    /* height: 100%; */
+    height: 80%;
+	/* max-height : calc(100vh - 1em); */
+
     display    : none;
     text-align : center;
+    /* For auto-scroll bar if too big for phones */
     overflow-y : auto;
 }
+
+@media (max-width: 414px) {
+    #modal, #episode-modal {
+    	position   : fixed;
+    	top        : 50%;
+        left       : 50%;
+        transform  : translate(-50%, -50%);
+    	/* max-height : calc(100vh - 1em); */
+        height: 83%;
+        display    : none;
+        text-align : center;
+        /* overflow-y : auto; */
+    }
+}
+@media (max-width: 375px) {
+    #modal, #episode-modal {
+    	position   : fixed;
+    	top        : 53%;
+        left       : 50%;
+        transform  : translate(-50%, -50%);
+    	/* max-height : calc(100vh - 3em); */
+        height: 90%;
+        display    : none;
+        text-align : center;
+        /* overflow-y : auto; */
+    }
+}
+@media (max-width: 320px) {
+    #modal, #episode-modal {
+    	position   : fixed;
+    	top        : 55%;
+        left       : 50%;
+        transform  : translate(-50%, -50%);
+    	/* max-height : calc(100vh - 1em); */
+        height: 95%;
+        display    : none;
+        text-align : center;
+        /* overflow-y : auto; */
+    }
+}
+
 #modal-textbox, #episode-modal-textbox {
     background-color : azure;
     font-family   : 'Nunito';
@@ -259,9 +334,14 @@ div#background {
     font-size: 0.9em;
 }
 .episode-options, .series-options {
-    background-color: azure;
+    background-color: #d3ddf1;
     width: 400px;
     padding: 0.2em 0.4 0.2em 0.4em;
+}
+.episode-options {
+    background-color: azure;
+    /* width: 400px; */
+    /* padding: 0.2em 0.4 0.2em 0.4em; */
 }
 
 @media (max-width: 414px) {

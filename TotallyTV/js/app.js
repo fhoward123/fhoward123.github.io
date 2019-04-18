@@ -1,5 +1,5 @@
-const DEBUG  = false;
-const DEBUG2 = false;
+const DEBUG  = true;
+const DEBUG2 = true;
 const showSearch = 'search/shows?q=';
 const api = 'https://api.tvmaze.com/';
 
@@ -177,7 +177,13 @@ const getSeriesInfo = function(event) {
     seriesData.name = searchResults[showIdx].show.name;
     if (DEBUG) console.log(`Series Name: ${seriesData.name}`);
     if (DEBUG) console.log(searchResults[showIdx]);
-    seriesData.mainImage = searchResults[showIdx].show.image.original;
+    if (searchResults[showIdx].show.image) {
+        seriesData.mainImage = searchResults[showIdx].show.image.original;
+    }
+    else {
+        seriesData.mainImage = 'https://ih0.redbubble.net/image.186051399.9597/raf,750x1000,075,t,fafafa:ca443f4786.jpg';
+    }
+
     if (DEBUG) console.log(seriesData.mainImage);
     seriesData.seriesSummary = searchResults[showIdx].show.summary;
     if (DEBUG) console.log(`Summary: ${seriesData.seriesSummary}`);
@@ -231,7 +237,10 @@ const buildEpisodeModal = function (event) {
     const season = allEpisodesForSeason[`episode${episodeNum}`]['seasonNumber'];
     const episodeDate = allEpisodesForSeason[`episode${episodeNum}`]['airDate'];
     const runtime = allEpisodesForSeason[`episode${episodeNum}`]['runtime'];
-    const episodeSum = allEpisodesForSeason[`episode${episodeNum}`]['episodeSum'];
+    let episodeSum = allEpisodesForSeason[`episode${episodeNum}`]['episodeSum'];
+    if ( ! episodeSum ) {
+        episodeSum = 'Episode Summary: N/A';
+    }
     const episodeImg = allEpisodesForSeason[`episode${episodeNum}`]['episodeImg'];
     const network = allSeasons[`season${season}`].network.name;
 
@@ -378,6 +387,36 @@ const pickShow = function(arrayOfShows) {
 //    $('.series-options').change(getSeriesInfo);
 }
 
+const noResults = function() {
+    // this initializes the dialog (and uses some common options that I do)
+
+    // <div id="dialog" title="">
+    //     Sorry, your search criteria did not return any results<BR><BR>Please try again
+    // </div>
+
+    const $div = $('<div>').attr('id', 'dialog');
+    const $p1 = $('<p>').attr('id', 'line-1').text('No matches found');
+    const $p2 = $('<p>').text('Please try again');
+
+    $div.append($p1);
+    $div.append($p2);
+    $('main').append($div);
+
+    $("#dialog").dialog({
+        autoOpen  : false,
+        modal     : true,
+        show      : "blind",
+        hide      : "blind",
+        closeText : 'Try again'
+    });
+
+    // next add the onclick handler
+    // $("#contactUs").click(function() {
+        $("#dialog").dialog("open");
+        return false;
+    // });
+};
+
 //////////////////////////////
 // Execution order:
 //      main code block
@@ -446,8 +485,15 @@ $('form').on('submit', function(event) {
         function(tvDataArr) {
             if (DEBUG) console.log('INSIDE initial PROMISE function');
             searchResults = tvDataArr;
-            // Object of collected series info
-            pickShow(searchResults);
+            if (DEBUG) console.log(searchResults.length);
+            // Object of collected series info unless no data was returned
+            if ( searchResults.length ) {
+                pickShow(searchResults);
+            }
+            else {
+                noResults();
+            }
+
             // How to get back here???
             // const seriesData = getSeriesInfo(tvDataArr[idx]);
             // setBackgroundImg(seriesData.mainImage);
