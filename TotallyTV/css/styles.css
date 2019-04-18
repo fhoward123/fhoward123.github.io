@@ -119,6 +119,7 @@ h1 {
 #season-btns {
     max-width : 30em;
     display: inline-block;
+    margin-bottom: 1em;
 }
 
 @media (max-width: 414px) {
@@ -280,7 +281,7 @@ div#background {
 }
 
 #episode-container, .show-container {
-    background-color: blue;
+    background-color: azure;
     margin-left: 0;
 }
 @media (max-width: 414px) {
@@ -440,6 +441,16 @@ label {
     font-family: 'Nanum Gothic', sans-serif;
     color: mediumblue;
     font-size: 14;
+}
+#season-label {
+    background-color: azure;
+    width: 80px;
+    margin: 0 auto;
+    border-style: ridge;
+    border-radius: 1em;
+    border-width: medium;
+    font-weight: 600;
+    padding-bottom: 0;
 }
 
 .summary-p {

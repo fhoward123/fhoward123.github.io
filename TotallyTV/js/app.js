@@ -21,13 +21,14 @@ const allShows = {};
 
 const buildModalData = function(seriesInfo) {
     if (DEBUG) console.log('INSIDE buildModalData');
-    const $ul = $('<ul>').addClass('summary-text').addClass('summary-list');
-    //$ul.addClass('summary-text');
-    // status, scheduled, premiered, network
-    // let $li = $('<li>').text(`Status: ${seriesInfo.status}`);
+    const $ul = $('<ul>')
+        .addClass('summary-text')
+        .addClass('summary-list');
+
     let $li = $('<li><span class="heading">Status: </span>' + seriesInfo.status + '</li>');
     $($ul).append($li);
     if (DEBUG) console.log(`schedule string: "${seriesInfo.schedule}"`);
+
     seriesInfo.schedule = seriesInfo.schedule == 'undefined ' ? 'N/A' : seriesInfo.schedule;
     // $li = $('<li>').text(`Schedule: ${seriesInfo.schedule}`);
     $li = $('<li><span class="heading">Schedule: </span>' + seriesInfo.schedule + '</li>');
@@ -37,6 +38,7 @@ const buildModalData = function(seriesInfo) {
     $($ul).append($li);
     // $li = $('<li>').text(`Network: ${seriesInfo.network}`);
     $li = $('<li><span class="heading">Network: </span>' + seriesInfo.network + '</li>');
+
     $($ul).append($li);
     // Append UL after summary paragraph
     $('.summary-p').append($ul);
@@ -71,10 +73,6 @@ const makeSeasonBtns = function(tvDataArr) {
 
         if (DEBUG) console.log(`Season started ${seasonStartDate} and ended ${seasonEndDate}`);
 
-
-        // seasonImages[`season${numOfSeasons}`] = season.image.medium;
-        // const $img = $('<img>').addClass('season-pics').attr('src', season.image.medium);
-        // $('#season-pics').append($img);
         const $seasonBtn = $('<input>')
             .addClass('season-btns')
             .attr('type', 'button')
@@ -280,6 +278,12 @@ const makeEpisodeOptions = function() {
     $('.episode-options').remove();
     $('#episode-container').remove();
 
+    const $label = $('<label>')
+        .attr('id', 'season-label')
+        .attr('for', 'show-container')
+        .text(`Season ${seasonNumber}`);
+
+    $('#episode-options').append($label);
     const $select = $('<select>').attr('id', 'episode-container').attr('size', 4);
     $('#episode-options').append($select);
 
@@ -388,12 +392,6 @@ const pickShow = function(arrayOfShows) {
 }
 
 const noResults = function() {
-    // this initializes the dialog (and uses some common options that I do)
-
-    // <div id="dialog" title="">
-    //     Sorry, your search criteria did not return any results<BR><BR>Please try again
-    // </div>
-
     const $div = $('<div>').attr('id', 'dialog');
     const $p1 = $('<p>').attr('id', 'line-1').text('No matches found');
     const $p2 = $('<p>').text('Please try again');
@@ -402,25 +400,24 @@ const noResults = function() {
     $div.append($p2);
     $('main').append($div);
 
-    $("#dialog").dialog({
+    // initialize the JQueryUI dialog using some common options
+    $('#dialog').dialog({
         autoOpen  : false,
         modal     : true,
-        show      : "blind",
-        hide      : "blind",
+        show      : 'blind',
+        hide      : 'blind',
         closeText : 'Try again'
     });
 
-    // next add the onclick handler
-    // $("#contactUs").click(function() {
-        $("#dialog").dialog("open");
-        return false;
-    // });
+    // add the onclick handler
+    $('#dialog').dialog('open');
+    return false;
 };
 
 //////////////////////////////
 // Execution order:
 //      main code block
-//      pickShow
+//      pickShow or noResults
 //      getSeriesInfo
 //      setBackgroundImg
 //      setupModal
@@ -440,18 +437,9 @@ const noResults = function() {
 //////////
 
 if (DEBUG) console.log('In main block WAITING for SEARCH click');
-// $(event.target).effect('bounce', 'fast');
 
 $('form').on('submit', function(event) {
-    // Reject empty input text
-    // if ( $('input[type="text"]').val() === null || $('input[type="text"]').val().match(/^ *$/) !== null ) {
-        // $('#input-box').val("");
-        // $(event.currentTarget).effect('bounce', 'fast');
-        // totallyTV();
-    // }
-    // else {
-    //     jQuery.fx.off = true;
-    // }
+    $(event.currentTarget).effect('bounce', 'fast');
 
     $('body > img').remove();
     $('.season-btns').remove();
