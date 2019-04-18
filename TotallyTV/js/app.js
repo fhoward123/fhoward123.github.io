@@ -1,5 +1,5 @@
-const DEBUG  = true;
-const DEBUG2 = true;
+const DEBUG  = false;
+const DEBUG2 = false;
 const showSearch = 'search/shows?q=';
 const api = 'https://api.tvmaze.com/';
 
