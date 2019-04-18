@@ -11,6 +11,10 @@
 @import url('https://fonts.googleapis.com/css?family=Muli:700|Paprika');
 /* font-family: 'Muli', sans-serif; */
 /* font-family: 'Paprika', cursive; */
+@import url('https://fonts.googleapis.com/css?family=Nanum+Gothic');
+/* font-family: 'Nanum Gothic', sans-serif; */
+@import url('https://fonts.googleapis.com/css?family=Doppio+One|Nanum+Gothic');
+/* font-family: 'Doppio One', sans-serif; */
 
 body {
     height : 100%;
@@ -56,6 +60,7 @@ input {
 }
 h1 {
     font-size: calc(1.9em + 0.6vw);
+    padding: 10px;
 }
 @media (max-width: 320px) {
     h1 {
@@ -127,22 +132,30 @@ div#background {
 	box-shadow    : 0px 2px 2px rgba(0, 0, 0, 0.2);
 }
 
-.episode-container {
+.episode-container, .show-container {
     text-align: center;
     background-color: blue;
 }
 
-#episode-options {
+#episode-options, #series-options {
     margin-top: 2em;
+}
+.series-options {
+    font-family: 'Doppio One', cursive;
+    font-size: 1.0em;
 }
 .episode-options {
     font-family: 'Paprika', cursive;
+    font-size: 1.0em;
+}
+.episode-options, .series-options {
+    /* font-family: 'Paprika', cursive; */
     background-color: azure;
     width: 340px;
     white-space: pre;
     padding: 0.3em 0 0.3em 0.4em;
 }
-.episode-options:hover {
+.episode-options:hover, .series-options:hover {
     background: darkviolet;
     text-decoration: none;
     color: white;
@@ -204,6 +217,10 @@ fieldset {
 label {
     display: block;
     margin: 0;
+    padding: 0 0 0.5em 0;
+    font-family: 'Nanum Gothic', sans-serif;
+    color: mediumblue;
+    font-size: 14;
 }
 
 .summary-p {

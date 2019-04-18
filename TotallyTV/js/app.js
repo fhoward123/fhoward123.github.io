@@ -63,6 +63,12 @@ const makeSeasonBtns = function(tvDataArr) {
         const seasonEndDate = allSeasons[eleID].endDate;
         const network = allSeasons[eleID].network.name;
         const numOfEpisodes = allSeasons[eleID].episodeOrder;
+
+        let episodesText = '';
+        if (numOfEpisodes) {
+            episodesText = `consisted of ${numOfEpisodes} episodes and `;
+        }
+
         if (DEBUG) console.log(`Season started ${seasonStartDate} and ended ${seasonEndDate}`);
 
 
@@ -74,7 +80,7 @@ const makeSeasonBtns = function(tvDataArr) {
             .attr('type', 'button')
             .attr('id', `season${numOfSeasons}`)
             .attr('value', `Season ${numOfSeasons}`)
-            .attr('title', `Season ${numOfSeasons} of ${seriesData.name} consisted of ${numOfEpisodes} episodes and ran from ${seasonStartDate} thru ${seasonEndDate} on ${network}`);
+            .attr('title', `Season ${numOfSeasons} of ${seriesData.name} ${episodesText}ran from ${seasonStartDate} thru ${seasonEndDate} on ${network}`);
 
         $('#season-btns').append($seasonBtn);
     });
@@ -148,7 +154,7 @@ const setupModal = function(seriesInfo) {
     $('#show-title').text(seriesInfo.name);
     $modal = $('#modal');
     buildModalData(seriesInfo);
-    setTimeout(openModal, 2000);
+    setTimeout(openModal, 3000);
 };
 $('#close').on('click', closeSeriesModal);
 
@@ -159,6 +165,7 @@ const getSeriesInfo = function(event) {
     // Remove select option menu
     $('#show-container').remove();
     $('.series-options').remove();
+    $('label').remove();
 
     if (DEBUG) console.log(`Click value: ${seriesID}`);
     // Object to hold gleaned data from TVMaze
@@ -192,7 +199,6 @@ const getSeriesInfo = function(event) {
         seriesData.network = searchResults[showIdx].show.network.name ? searchResults[showIdx].show.network.name : '';
     }
     if (DEBUG) console.log(`Network: ${seriesData.network}`);
-    //return seriesData;
 
     setBackgroundImg(seriesData.mainImage);
     setupModal(seriesData);
@@ -200,7 +206,7 @@ const getSeriesInfo = function(event) {
 
 const setBackgroundImg = function(imgURL) {
     if (DEBUG) console.log('INSIDE setBackgroundImg');
-//    $('body').remove($('img'));
+    $('body > img').remove();
     const $img = $('<img>');
     $img.addClass('back-img');
     $img.attr('src', imgURL);
@@ -275,6 +281,7 @@ const makeEpisodeOptions = function() {
     });
     // Setup listener for when an episode button is clicked
     $('.episode-options').on('click', buildEpisodeModal);
+//    $('.episode-options').change(buildEpisodeModal);
 }
 
 const getSeasonInfo = function(event) {
@@ -332,11 +339,11 @@ const pickShow = function(arrayOfShows) {
 
     const $select = $('<select>')
         .attr('name', 'show-container')
-        .attr('size', 8)
+        .attr('size', 4)
         .attr('id', 'show-container');
 
     const $label = $('<label>')
-        .addClass('series-options')
+        // .addClass('series-options')
         .attr('for', 'show-container')
         .text('Search Results: (Select One)');
 
@@ -361,13 +368,17 @@ const pickShow = function(arrayOfShows) {
     });
     // Show list of fuzzy search results of user's input text
     if (DEBUG2) console.log(Object.keys(allShows));
-
-    // Make options visible
-    //$select.attr('style', 'display: contents');
-    //$('#show-container').selectmenu();
+    //////////////////////////////////////////////
+    //// JQueryUI selectmenu DOES NOT WORK! /////
+    // $('select#show-container').selectmenu({
+    //     style:'popup',
+    //     width: 300,
+    // });
+    //////////////////////////////////////////////
 
     // Setup listener for when an episode button is clicked
     $('.series-options').on('click', getSeriesInfo);
+//    $('.series-options').change(getSeriesInfo);
 }
 
 //////////////////////////////
@@ -413,6 +424,11 @@ $('form').on('submit', function(event) {
 
     $('.season-btns').tooltip();
     $('#searchBtn').tooltip();
+
+    // Remove select option menu
+    $('#show-container').remove();
+    $('.series-options').remove();
+    $('label').remove();
 
     seasons = [];
     allSeasons = {};
