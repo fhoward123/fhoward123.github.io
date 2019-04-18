@@ -46,7 +46,7 @@ footer {
     text-align: center;
     bottom: 3em;
     background-color: azure;
-    width: 110px;
+    width: 120px;
     font-size: 12px;
     /* centers footer horizontally */
     margin: 0 auto;
@@ -145,7 +145,7 @@ h1 {
     background: azure;
     border-radius: 28px;
     font-size: 0.8em;
-    border-color: #7f13d8;    
+    border-color: #7f13d8;
 }
 .season-btns:hover, .season-btns:active {
     background: #7f13d8;
