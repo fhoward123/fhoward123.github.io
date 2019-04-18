@@ -1,5 +1,5 @@
-const DEBUG  = false;
-const DEBUG2 = false;
+const DEBUG  = true;
+const DEBUG2 = true;
 const showSearch = 'search/shows?q=';
 const api = 'https://api.tvmaze.com/';
 
@@ -18,6 +18,7 @@ let eleID = '';
 let $modelID = '';
 let $searchResults = [];
 const allShows = {};
+let noEpisodes = false;
 
 const buildModalData = function(seriesInfo) {
     if (DEBUG) console.log('INSIDE buildModalData');
@@ -45,6 +46,20 @@ const buildModalData = function(seriesInfo) {
     $('li').css('list-style-type', 'none');
 };
 
+const onSeasonClick = function(event) {
+    if (DEBUG) console.log('INSIDE onSeasonClick');
+    const eleID = $(event.currentTarget).attr('id');
+    seasonID = allSeasons[eleID].id;
+    const seasonStartDate = allSeasons[eleID].premiereDate;
+    const seasonEndDate = allSeasons[eleID].endDate;
+    seasonNumber = allSeasons[eleID].number;
+
+    if ( ! seasonStartDate  &&  ! seasonEndDate ) {
+        noEpisodes = true;
+    }
+    getSeasonInfo();
+};
+
 const makeSeasonBtns = function(tvDataArr) {
     if (DEBUG) console.log('INSIDE makeSeasonBtns');
     // remove old buttons to display new query results
@@ -65,10 +80,15 @@ const makeSeasonBtns = function(tvDataArr) {
         const seasonEndDate = allSeasons[eleID].endDate;
         const network = allSeasons[eleID].network.name;
         const numOfEpisodes = allSeasons[eleID].episodeOrder;
+        const seriesNameTmp = allSeasons[eleID].name;
 
-        let episodesText = '';
+        let episodesText1 = '';
+        let episodesText2 = '';
         if (numOfEpisodes) {
-            episodesText = `consisted of ${numOfEpisodes} episodes and `;
+            episodesText1 = `consisted of ${numOfEpisodes} episodes and `;
+        }
+        if ( seasonStartDate  &&  seasonEndDate ) {
+            episodesText2 = `from ${seasonStartDate} thru ${seasonEndDate}`;
         }
 
         if (DEBUG) console.log(`Season started ${seasonStartDate} and ended ${seasonEndDate}`);
@@ -78,7 +98,7 @@ const makeSeasonBtns = function(tvDataArr) {
             .attr('type', 'button')
             .attr('id', `season${numOfSeasons}`)
             .attr('value', `Season ${numOfSeasons}`)
-            .attr('title', `Season ${numOfSeasons} of ${seriesData.name} ${episodesText}ran from ${seasonStartDate} thru ${seasonEndDate} on ${network}`);
+            .attr('title', `Season ${numOfSeasons} of ${seriesData.name} ${episodesText1}ran ${episodesText1}on ${network}`);
 
         $('#season-btns').append($seasonBtn);
     });
@@ -154,7 +174,7 @@ const setupModal = function(seriesInfo) {
     buildModalData(seriesInfo);
     setTimeout(openModal, 2300);
 };
-$('#close').on('click', closeSeriesModal);
+$('.close').on('click', closeSeriesModal);
 
 const getSeriesInfo = function(event) {
     if (DEBUG) console.log('INSIDE getSeriesInfo');
@@ -270,20 +290,36 @@ const buildEpisodeModal = function (event) {
     $modal = $('#episode-modal');
     setTimeout(openModal, 0);
 };
-$('#close2').on('click', closeEpisodeModal);
+$('.close').on('click', closeEpisodeModal);
 
 const makeEpisodeOptions = function() {
     if (DEBUG) console.log('INSIDE makeEpisodeOptions');
     // remove old option container to display new episode results
     $('.episode-options').remove();
     $('#episode-container').remove();
+    $('label').remove();
 
-    const $label = $('<label>')
-        .attr('id', 'season-label')
-        .attr('for', 'show-container')
-        .text(`Season ${seasonNumber}`);
+    const $label = $('<label>');
+    if ( noEpisodes ) {
+        $label.attr('id', 'season-label')
+              .attr('for', 'show-container')
+              .text('No Info Available');
+        episodes = [];
+    }
+    else {
+        $label.attr('id', 'season-label')
+              .attr('for', 'show-container')
+              .text(`Season ${seasonNumber}`);
+    }
 
     $('#episode-options').append($label);
+
+    if ( noEpisodes ) {
+        // reset flag
+        noEpisodes = false;
+        return false;
+    }
+
     const $select = $('<select>').attr('id', 'episode-container').attr('size', 4);
     $('#episode-options').append($select);
 
@@ -294,7 +330,6 @@ const makeEpisodeOptions = function() {
     });
     // Setup listener for when an episode button is clicked
     $('.episode-options').on('click', buildEpisodeModal);
-//    $('.episode-options').change(buildEpisodeModal);
 }
 
 const getSeasonInfo = function(event) {
@@ -334,16 +369,6 @@ const getSeasonInfo = function(event) {
             console.log('bad request');
         }
     );
-};
-
-const onSeasonClick = function(event) {
-    if (DEBUG) console.log('INSIDE onSeasonClick');
-    const eleID = $(event.currentTarget).attr('id');
-    seasonID = allSeasons[eleID].id;
-    const seasonStartDate = allSeasons[eleID].premiereDate;
-    const seasonEndDate = allSeasons[eleID].endDate;
-    seasonNumber = allSeasons[eleID].number;
-    getSeasonInfo();
 };
 
 const pickShow = function(arrayOfShows) {
