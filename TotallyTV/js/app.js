@@ -194,7 +194,7 @@ const getSeriesInfo = function(event) {
         seriesData.mainImage = searchResults[showIdx].show.image.original;
     }
     else {
-        seriesData.mainImage = './images.defaultBackground.jpg';
+        seriesData.mainImage = './images/defaultBackground.jpg';
     }
 
     if (DEBUG) console.log(seriesData.mainImage);
