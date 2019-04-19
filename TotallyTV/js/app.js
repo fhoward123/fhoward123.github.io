@@ -193,7 +193,7 @@ const getSeriesInfo = function(event) {
         seriesData.mainImage = searchResults[showIdx].show.image.original;
     }
     else {
-        seriesData.mainImage = './images/defaultBackground.jpg';
+        seriesData.mainImage = 'https://ih0.redbubble.net/image.186051399.9597/raf,750x1000,075,t,fafafa:ca443f4786.jpg';
     }
 
     if (DEBUG) console.log(seriesData.mainImage);
