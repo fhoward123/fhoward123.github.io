@@ -183,7 +183,6 @@ const getSeriesInfo = function(event) {
     if (DEBUG) console.log(`Click value: ${seriesID}`);
     // Object to hold gleaned data from TVMaze
     seriesData = {};
-    // Hardcoded to first result for testing --- NEED TO FIX ***********
     const showIdx = allShows[seriesID];
     seriesID = seriesData.id = searchResults[showIdx].show.id;
     if (DEBUG) console.log(`Series ID: ${seriesData.id}`);
