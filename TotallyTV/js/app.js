@@ -29,6 +29,7 @@ const buildModalData = function(seriesInfo) {
     $($ul).append($li);
     if (DEBUG) console.log(`schedule string: "${seriesInfo.schedule}"`);
 
+    seriesInfo.premiered = seriesInfo.premiered ? seriesInfo.premiered : 'N/A';
     seriesInfo.schedule = seriesInfo.schedule == 'undefined ' ? 'N/A' : seriesInfo.schedule;
     // $li = $('<li>').text(`Schedule: ${seriesInfo.schedule}`);
     $li = $('<li><span class="heading">Schedule: </span>' + seriesInfo.schedule + '</li>');
