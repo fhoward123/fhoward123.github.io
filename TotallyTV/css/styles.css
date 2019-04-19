@@ -147,11 +147,12 @@ footer {
     text-decoration: none;
     color: white;
     cursor: pointer;
-    text-transform: uppercase;
+    /* Disabled cuz it makes buttons jump around */
+    /* text-transform: uppercase; */
 }
 .season-btns:active {
     background: blue;
-    border: 5px solid #0099CC;
+    border: 1px solid #0099CC;
 }
 
 div#background {

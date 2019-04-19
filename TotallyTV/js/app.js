@@ -15,8 +15,7 @@ let seasonStart = '';
 let seasonEnd = '';
 let episodes = [];
 let eleID = '';
-let $modelID = '';
-let $searchResults = [];
+let searchResults = [];
 const allShows = {};
 let noEpisodes = false;
 
@@ -98,7 +97,7 @@ const makeSeasonBtns = function(tvDataArr) {
             .attr('type', 'button')
             .attr('id', `season${numOfSeasons}`)
             .attr('value', `Season ${numOfSeasons}`)
-            .attr('title', `Season ${numOfSeasons} of ${seriesData.name} ${episodesText1}ran ${episodesText1}on ${network}`);
+            .attr('title', `Season ${numOfSeasons} of ${seriesData.name} ${episodesText1}ran ${episodesText2} on ${network}`);
 
         $('#season-btns').append($seasonBtn);
     });
@@ -132,23 +131,23 @@ const getAllSeasons = function() {
     );
 };
 
-const closeEpisodeModal = () => {
-    if (DEBUG) console.log('INSIDE closeEpisodeModal');
-    $modal.css('display', 'none');
+const removeModalData = function() {
     // Remove old data from modal
     $('.summary-text').remove();
     $('.summary-list').remove();
     $('.summary-p').remove();
 }
 
+const closeEpisodeModal = () => {
+    if (DEBUG) console.log('INSIDE closeEpisodeModal');
+    $modal.css('display', 'none');
+    removeModalData();
+}
+
 const closeSeriesModal = () => {
     if (DEBUG) console.log('INSIDE closeSeriesModal');
     $modal.css('display', 'none');
-    // Remove old data from modal
-    $('.summary-text').remove();
-    $('.summary-list').remove();
-    $('.summary-p').remove();
-
+    removeModalData();
     getAllSeasons();
 }
 
@@ -159,11 +158,7 @@ const openModal = () => {
 
 const setupModal = function(seriesInfo) {
     if (DEBUG) console.log('INSIDE setupModal');
-    // Remove old data from modal
-    $('.summary-text').remove();
-    $('.summary-list').remove();
-    $('.summary-p').remove();
-
+    removeModalData();
     // Strip out the HTML embedded in the summaries
     const summary = seriesInfo.seriesSummary.replace(/<\/?[^>]+(>|$)/g, "");
     const $pSummary = $('<p>').addClass('summary-text').addClass('summary-p').text(summary);
@@ -240,11 +235,7 @@ const setBackgroundImg = function(imgURL) {
 
 const buildEpisodeModal = function (event) {
     if (DEBUG) console.log('INSIDE buildEpisodeModal');
-    // Remove old data from modal
-    $('.summary-text').remove();
-    $('.summary-list').remove();
-    $('.summary-p').remove();
-
+    removeModalData();
     // Check if episode is 2 digits or just 1
     let episodeNum = $(event.currentTarget).attr('id').slice(-2);
     if ( isNaN(episodeNum) ) {
@@ -309,7 +300,7 @@ const makeEpisodeOptions = function() {
     else {
         $label.attr('id', 'season-label')
               .attr('for', 'show-container')
-              .text(`Season ${seasonNumber}`);
+              .text(`Season ${seasonNumber} episode list`);
     }
 
     $('#episode-options').append($label);
@@ -344,6 +335,7 @@ const getSeasonInfo = function(event) {
         // Success Callback function
         function(seasonArr) {
             if (DEBUG) console.log('running callback function for getSeasonInfo');
+            // reset global
             episodes = [];
 
             seasonArr.forEach(function(episode, i) {
@@ -414,13 +406,12 @@ const pickShow = function(arrayOfShows) {
 
     // Setup listener for when an episode button is clicked
     $('.series-options').on('click', getSeriesInfo);
-//    $('.series-options').change(getSeriesInfo);
 }
 
 const noResults = function() {
     const $div = $('<div>').attr('id', 'dialog');
-    const $p1 = $('<p>').attr('id', 'line-1').text('No matches found');
-    const $p2 = $('<p>').text('Please try again');
+    const $p1  = $('<p>').attr('id', 'line-1').text('No matches found');
+    const $p2  = $('<p>').text('Please try again');
 
     $div.append($p1);
     $div.append($p2);
@@ -467,11 +458,13 @@ if (DEBUG) console.log('In main block WAITING for SEARCH click');
 $('form').on('submit', function(event) {
     $(event.currentTarget).effect('bounce', 'fast');
 
+    // cleanup for new search
     $('body > img').remove();
     $('.season-btns').remove();
     $('.episode-options').remove();
     $('#episode-container').remove();
 
+    // Enable tooltip feature of JQueryUI
     $('.season-btns').tooltip();
     $('#searchBtn').tooltip();
 
@@ -480,13 +473,13 @@ $('form').on('submit', function(event) {
     $('.series-options').remove();
     $('label').remove();
 
-    seasons = [];
+    // reset globals
+    seasons    = [];
     allSeasons = {};
 
     event.preventDefault();
     // Select input item with attribute "type" = "text" in HTML
-    let showName = $('input[type="text"]').val();
-    //showName = titleCase(showName);
+    const showName = $('input[type="text"]').val();
     if (DEBUG) console.log(showName);
     if (DEBUG) console.log(api + showSearch + showName);
     // Latest AJAX method
@@ -507,11 +500,6 @@ $('form').on('submit', function(event) {
             else {
                 noResults();
             }
-
-            // How to get back here???
-            // const seriesData = getSeriesInfo(tvDataArr[idx]);
-            // setBackgroundImg(seriesData.mainImage);
-            // setupModal(seriesData);
         },
         // Failure Callback function
         function() {
@@ -533,39 +521,4 @@ $('form').on('submit', function(event) {
 
 // onSelected: function(selectedData){
 //     //callback function: do something with selectedData;
-// }
-
-
-// const makeEpisodeBtns = function() {
-//     if (DEBUG) console.log('INSIDE makeEpisodeBtns');
-//     // remove old buttons to display new query results
-//     $('.episode-btns').remove();
-//
-//     episodes.forEach(function(episode, i) {
-//         // allSeasons[episode] = `Episode ${i}`;
-//         const episodeText = allEpisodesForSeason[`${episode}`]['episodeName'];
-//         const $episodeBtn = $('<input>').addClass('episode-btns').attr('type', 'button').attr('id', `episode${i + 1}`).attr('value', `Episode ${i + 1} - ${episodeText}`);
-//         $('#episode-btns').append($episodeBtn);
-//     });
-//     // Setup listener for when a season button is clicked
-//     $('.episode-btns').on('click', onEpisodeClick);
-// }
-
-// const titleCase = function(string) {
-//     return string.replace(/(?:^|\s)\w/g, function(letter) {
-//         return letter.toUpperCase();
-//     });
-// }
-
-// const findShowIdx = function(tvDataArr, showName) {
-//     for ( i = 0; i < tvDataArr.length; i++ ) {
-//         if (DEBUG) console.log(tvDataArr[i].show.name);
-//         if ( tvDataArr[i].show.name === showName ) {
-//             if (DEBUG) console.log(`Found ${showName}`);
-//                 return i;
-//         }
-//         else {
-//             if (DEBUG) console.log(`No match for ${showName}`);
-//         }
-//     }
 // }
