@@ -138,20 +138,20 @@ const removeModalData = function() {
     $('.summary-p').remove();
 }
 
-const closeEpisodeModal = () => {
+const closeEpisodeModal = function() {
     if (DEBUG) console.log('INSIDE closeEpisodeModal');
     $modal.css('display', 'none');
     removeModalData();
 }
 
-const closeSeriesModal = () => {
+const closeSeriesModal = function() {
     if (DEBUG) console.log('INSIDE closeSeriesModal');
     $modal.css('display', 'none');
     removeModalData();
     getAllSeasons();
 }
 
-const openModal = () => {
+const openModal = function() {
     if (DEBUG) console.log('INSIDE openModal');
     $modal.css('display', 'block');
 };
@@ -194,7 +194,7 @@ const getSeriesInfo = function(event) {
         seriesData.mainImage = searchResults[showIdx].show.image.original;
     }
     else {
-        seriesData.mainImage = 'https://ih0.redbubble.net/image.186051399.9597/raf,750x1000,075,t,fafafa:ca443f4786.jpg';
+        seriesData.mainImage = './images.defaultBackground.jpg';
     }
 
     if (DEBUG) console.log(seriesData.mainImage);
@@ -428,11 +428,14 @@ const noResults = function() {
 
     // add the onclick handler
     $('#dialog').dialog('open');
+
+    // Clear input box after closing modal
+    $('#input-form').find('input:text').val('');
     return false;
 };
 
 //////////////////////////////
-// Execution order:
+//  Basic execution order:
 //      main code block
 //      pickShow or noResults
 //      getSeriesInfo
