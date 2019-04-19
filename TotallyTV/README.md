@@ -1,7 +1,7 @@
 # Totally TV application
 *Totally TV* allows users to search for their favorite TV shows and retrieve information about them. Since a user may not know the exact name of a TV series a fuzzy search is performed. The user can then select from a list of search matches to find the exact show they are interested in.
 
-** Available Information **
+**Available Information**
 - Series summary
 - Episode summary
 - Episode runtime
