@@ -382,6 +382,7 @@ const pickShow = function(arrayOfShows) {
 
     const $label = $('<label>')
         .attr('for', 'show-container')
+        .attr('id', 'series-label')
         .text('Search Results: (Select One)');
 
     $('fieldset').append($label);
