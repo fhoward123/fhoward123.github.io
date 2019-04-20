@@ -1,5 +1,5 @@
-const DEBUG  = false;
-const DEBUG2 = false;
+const DEBUG  = true;
+const DEBUG2 = true;
 const showSearch = 'search/shows?q=';
 const api = 'https://api.tvmaze.com/';
 
@@ -172,6 +172,16 @@ const setupModal = function(seriesInfo) {
 };
 $('.close').on('click', closeSeriesModal);
 
+const setBackgroundImg = function(imgURL) {
+    if (DEBUG) console.log('INSIDE setBackgroundImg');
+    $('body > img').remove();
+    const $img = $('<img>');
+    $img.addClass('back-img');
+    $img.attr('src', imgURL);
+    $('body').append($img);
+    return true;
+};
+
 const getSeriesInfo = function(event) {
     if (DEBUG) console.log('INSIDE getSeriesInfo');
     seriesID = $(event.currentTarget).attr('value');
@@ -221,16 +231,6 @@ const getSeriesInfo = function(event) {
 
     setBackgroundImg(seriesData.mainImage);
     setupModal(seriesData);
-};
-
-const setBackgroundImg = function(imgURL) {
-    if (DEBUG) console.log('INSIDE setBackgroundImg');
-    $('body > img').remove();
-    const $img = $('<img>');
-    $img.addClass('back-img');
-    $img.attr('src', imgURL);
-    $('body').append($img);
-    return true;
 };
 
 const buildEpisodeModal = function (event) {
@@ -436,7 +436,7 @@ const noResults = function() {
 
 //////////////////////////////
 //  Basic execution order:
-//      main code block
+//      initialize
 //      pickShow or noResults
 //      getSeriesInfo
 //      setBackgroundImg
@@ -456,10 +456,10 @@ const noResults = function() {
 // main //
 //////////
 
-if (DEBUG) console.log('In main block WAITING for SEARCH click');
+const initialize = function(event) {
+    if (DEBUG) console.log('INSIDE initialize');
 
-$('form').on('submit', function(event) {
-    $(event.currentTarget).effect('bounce', 'fast');
+    $(event.currentTarget).effect('bounce', 'slow');
 
     // cleanup for new search
     $('body > img').remove();
@@ -509,8 +509,10 @@ $('form').on('submit', function(event) {
             console.log('bad request');
         }
     );
-});
+};
+$('form').on('submit', initialize);
 
+if (DEBUG) console.log('WAITING for SEARCH click');
 
 
 
